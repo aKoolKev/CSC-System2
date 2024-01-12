@@ -5,6 +5,19 @@ using namespace std;
 //static means this variable has scope to this file only
 static int **DFA=nullptr; //nullptr is new c++ version of NULL
 
+void 
+Token::printTable()
+{
+  for (int row = 0; row <= 7; row++)
+  {
+    for (int col = 0; col < 256; col++)
+      cout << DFA[row][col] << " | ";
+    cout << endl;
+  }
+  cout << "DONE\n\n";
+}
+
+
 istream&
 Token::read(istream &is)
 {
@@ -44,6 +57,10 @@ Token::read(istream &is)
     
   } // finished initializing our DFA table
 
+  // Uncomment to print out DFA table
+  // printTable();
+  // cout << "\n\n";
+
   // goal fill in _value from input file
   //          and _type as token type
   _value = "";
@@ -69,8 +86,11 @@ Token::read(istream &is)
     {
       _value+=ch; // ... add char to lexeme's value
     }
+    // else //debug
+    //   cout << "ERROR!";
   }
 
+  //cout << "Hopped out of while loop\n\n"; //debug
   // hopped out because next is an error ... prev held the correct state
   _type = prev; 
 
@@ -119,3 +139,5 @@ istream& operator>>(istream &is, Token &t)
 {
   return t.read(is);
 }
+
+

@@ -34,5 +34,9 @@ public:
   
   friend std::ostream& operator<<(std::ostream &os, const Token &t);
   friend std::istream& operator>>(std::istream &is, Token &t);
+
+  //my own function that prints out the DFA table
+  void printTable();
+
 };
 #endif
