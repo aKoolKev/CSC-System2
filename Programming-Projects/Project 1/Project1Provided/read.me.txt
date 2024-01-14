@@ -1,0 +1,40 @@
+AUTHOR: Kevin Dong
+DATE: 1/11/24
+
+|PLATFORM|: 
+   ⚬ macOS, VS CODE
+
+|COMPILE DIRECTIONS|:
+    ⚬ Compile program with provided make file. 
+        Executable name: Tokenify
+
+|RUN PROGRAM DIRECTIONS|:
+    ⚬ Specify an input file in the command line
+
+|BUGS|: 
+
+|SOLUTION APPROACH|:
+
+
+|LOG|:
+
+    1/13:
+        ⚬ Understand handout
+        ⚬ Create an empty DFA table if it does not already exists
+
+            ??? What is the size of our table?
+            There are 20 states...16 of which are final states 
+
+            ??? What is the enum of the start state
+
+        ⚬ Mapped out the simple transitions: COMMA, RBRACK, LBRACK, SEMICOLON, RPAREN, LPAREN
+
+        ⚬ Attempted to mapped the "2nd layer transitions": RELOP, ASSIGNOP, NUM_INT, NUM_REAL
+
+        ⚬ Not sure what to do with MULOP, ADDOP 
+
+        ⚬ Mapped out OR & AND
+
+            ??? How to map out the alphabets
+
+        ⚬ Wait until next class period for more information
