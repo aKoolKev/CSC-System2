@@ -38,3 +38,11 @@ DATE: 1/11/24
             ??? How to map out the alphabets
 
         ⚬ Wait until next class period for more information
+
+
+    1/16:
+        ⚬ Working on skipping white spaces
+            ⚬ Will need to work on skipping comments "#"
+        ⚬ Working on mapping ALPHA lowercase (DONE)
+            ⚬ ... and uppercase (DONE)
+        
