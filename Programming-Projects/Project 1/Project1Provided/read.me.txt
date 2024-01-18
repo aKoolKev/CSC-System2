@@ -45,4 +45,11 @@ DATE: 1/11/24
             ⚬ Will need to work on skipping comments "#"
         ⚬ Working on mapping ALPHA lowercase (DONE)
             ⚬ ... and uppercase (DONE)
+    
+    1/17:
+        ⚬ Should not use enum values because it does not align to the graph
+            ⚬ Just going to use the int values on the graph 
+            ⚬ (DONE)
+
+        ⚬ Need to figure out how to assign _type to of type TokenType
         
