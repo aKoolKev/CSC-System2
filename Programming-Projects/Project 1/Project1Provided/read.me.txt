@@ -52,4 +52,17 @@ DATE: 1/11/24
             ⚬ (DONE)
 
         ⚬ Need to figure out how to assign _type to of type TokenType
+
+    1/18:
+        ⚬ Create a helper function that returns the corresponding TokenType values
+        ⚬ Need to handle comments #
+            ⚬ Wrote a function that determines if current character is a commment
+            ⚬ DONE: Can handle comments!
+        ⚬ Need to fix line number when comments are encountered (DONE)
+        ⚬ Need to stop the program if we reach the end of the file (DONE)
+        ⚬ Need to check if valid ID is a reserved word (DONE)
+        ⚬ Making my own test case 
+
+    1/19:
+        ⚬ Program cannot handle &&& or |||          s
         

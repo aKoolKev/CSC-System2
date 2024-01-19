@@ -27,30 +27,82 @@ string TokStr[]=
 static string reserved[]={"int" , "float", "while", "if", "then", "else", "void", "begin", "end" };
 
 
-// helper function that returns the Token Type of a Final State number
-string getTokenTypeByNum (int finalStateNum)
+
+
+// helper function that indicate if a provided character is a '#'
+bool isComment(char ch)
+{
+  bool val = false;
+
+  if (ch == '#')
+    val = true;
+
+  return val;
+}
+
+// helper function that returns the Token Type of a given final state number (based on graph)
+TokenType getTokenTypeByNum (int finalStateNum)
 {
   switch (finalStateNum)
   {
-    case 1: return "ID";
-    case 2: return "NUM_INT";
-    case 4: return "NUM_REAL";
-    case 5: return "ADDOP";
-    case 6: return "MULOP";
-    case 7: return "RELOP";
-    case 8: return "RELOP";
-    case 9: return "ASSIGNOP";
-    case 10: return "LPAREN";
-    case 11: return "RPAREN";
-    case 13: return "AND";
-    case 15: return "OR";
-    case 16: return "SEMICOLON";
-    case 17: return "LBRACK";
-    case 18: return "RBRACK";
-    case 19: return "COMMA";
+    case 1: return ID;
+    case 2: return NUM_INT;
+    case 4: return NUM_REAL;
+    case 5: return ADDOP;
+    case 6: return MULOP;
+    case 7: return RELOP;
+    case 8: return RELOP;
+    case 9: return ASSIGNOP;
+    case 10: return LPAREN;
+    case 11: return RPAREN;
+    case 13: return AND;
+    case 15: return OR;
+    case 16: return SEMICOLON;
+    case 17: return LBRACK;
+    case 18: return RBRACK;
+    case 19: return COMMA;
   }
-  cout << "ERROR: " << finalStateNum << " is invalid!\n\n";
+
+  // DEBUG
+  cout << "ERROR: " << finalStateNum << " is invalid!\n\n"; 
+
+  // sole purpose is to get read of warning for not returning something in the function
+  // (will not reach here...should not)
+  return (TokenType) finalStateNum;
 }
+
+TokenType getReservedTokenType(int index)
+{
+  
+  
+
+  // if ( val == reserved[0]) return INTEGER;
+  // else if (val == reserved[1]) return FLOAT;
+  // else if (val == reserved[2]) return WHILE;
+  // else if (val == reserved[3]) return IF;
+  // else if (val == reserved[4]) return THEN;
+  // else if (val == reserved[5]) return ELSE;
+  // else if (val == reserved[6]) return VOID;
+  // else if (val == reserved[7]) return BEGIN;
+  // else if (val == reserved[8]) return END;
+
+  switch (index)
+  {
+    case 0: return INTEGER;
+    case 1: return FLOAT;
+    case 2: return WHILE;
+    case 3: return IF;
+    case 4: return THEN;
+    case 5: return ELSE;
+    case 6: return VOID;
+    case 7: return BEGIN;
+    case 8: return END;
+  }
+
+  //DEBUG
+  cout << "ERROR: Could not find a match!\n\n";
+}
+
 
 /******************************************************
  *  just prints out the info describing this Token    *
@@ -172,36 +224,69 @@ void Token::get(istream &is)
       for (char digit='0'; digit<='9'; digit++)
         DFA[1][ (int) digit ] = 1;  //ALPHA (1) -> DIGIT (1)
 
-
   } //finish initializing table
   
+
+  // keep track of the state
+  int currState = 0; /*PLACE HOLDER*/          // ** still do not know the number for start state
+  int prevState = -1;  // at start, no previous state
+
 
   _value = ""; // hold value read from input file
   char ch;
 
   // ** should probably think about skipping white space here **
   ch = is.get();// get next char from input
-  while (isspace(ch)) // || is isComment() ...
+
+  //DEBUG
+  // cout << "ch: " << ch << ".\n\n";
+  
+  //_line_num is initalized to zero, but file number starts at 1
+  if (_line_num == 0)
+    _line_num++;
+
+  //NEED TO HANDLE IF IT IS A COMMENT #
+  while (isspace(ch) || isComment(ch)) // || is isComment() ...
   {
+    //DEBUG
+    //cout << "Token.cpp: isspace    ch: " << ch << ".\n\n";
+
     if (ch=='\n') // char read was a new line
       _line_num++;
 
+
+    //check if it is a comment
+    if (isComment(ch))
+    {
+      _line_num++;
+      // cout << "Encountered a comment!\n\n";
+      string commentStmt;
+      getline(is, commentStmt); // "skip the values of the comment"
+      // cout << "commentStmt: " << commentStmt << endl;
+    }
+
     ch = is.get();
+    // cout << "ch: " << ch << "\n\n";
+
   }
+
   if (!is)
-    // _type = TokenType[];                    //NEED TO FIX
+  {
+    _type = EOF_TOK;    
+    return;                //NEED TO FIX
+  }
 
   is.putback(ch); 
+  //cout << "Token.cpp: isspace putback    ch: " << ch << "\n\n";
 
-
-  //keep track of the state
-  int currState = 0; /*PLACE HOLDER*/          // ** still do not know the number for start state
-  int prevState = -1;  // at start, no previous state
 
   //the algorithm
-  while(currState!=-1)
+  while(currState!=-1) // -1 denotes ERROR
   {
     ch = is.get(); // get next char from input
+
+    //DEBUG
+    //cout << "Token.cpp: while()    ch: " << ch << "\n\n";
 
     // move to next state based on character read
     prevState = currState;
@@ -210,10 +295,25 @@ void Token::get(istream &is)
     if (currState!=-1) // if character is a valid part of token ...
       _value+=ch; // ... add char to lexem's value
 
+
+    // need to conssider end of file token...
+
   }
   
-  // hopped out because next 
-  _type = TokenType(prevState);       //NOT SURE HOW TO DO, BUT NEED TO FIX
+  // hopped out because we have encountered a valid state (ERROR)
+
+  
+  _type = getTokenTypeByNum(prevState); 
+
+  // make sure ID is not a reserved word
+  if (_type == getTokenTypeByNum(1) /* 1=ID */)
+  {
+    for (int i=0; i<9; i++) // check if it is a reserved keyword
+    {
+      if (_value == reserved[i]) // it is a reserved keyword
+        _type = getReservedTokenType(i); // change the type to the reserve token type
+    }
+  }
 
   // we read an extra character ... put it back for the next read()
   if (is) // insure we are not at the end of the line

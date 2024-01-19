@@ -12,8 +12,8 @@ LNK=g++
 OBJS=Token.o main.o
 GLBL=Makefile Token.hpp
 
-tokenify: $(OBJS)
-	$(LNK) -o tokenify $(OBJS)
+run: $(OBJS)
+	$(LNK) -o run $(OBJS)
 
 main.o: main.cpp Token.hpp $(GLBL)
 	$(CC) main.cpp
@@ -22,4 +22,4 @@ Token.o: Token.cpp Token.hpp $(GLBL)
 	$(CC) Token.cpp
 
 clean:
-	/bin/rm -f *.o tokenify *~
+	/bin/rm -f *.o run *~
