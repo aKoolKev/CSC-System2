@@ -1,31 +1,44 @@
 AUTHOR: Kevin Dong
 DATE: 1/11/24
 
+
 |PLATFORM|: 
    ⚬ macOS, VS CODE
 
+
 |COMPILE DIRECTIONS|:
     ⚬ Compile program with provided make file. 
-        Executable name: Tokenify
+        Executable name: run
+
 
 |RUN PROGRAM DIRECTIONS|:
     ⚬ Specify an input file in the command line
 
-|BUGS|: 
+
+|BUGS|:
+    ⚬ No apparent/known bugs, but that does not gaurentee it will work for all cases.
+
 
 |SOLUTION APPROACH|:
+    ⚬ Create DFA table
+    ⚬ Initialize DFA table
+    ⚬ "Map" the provided graph in our DFA table
+    ⚬ Run program with provided test case
+    ⚬ Handle comments
+    ⚬ Handle reserved key words
+    ⚬ Create and test with my own test case
 
 
 |LOG|:
 
     1/13:
         ⚬ Understand handout
-        ⚬ Create an empty DFA table if it does not already exists
+        ⚬ Create an DFA table
 
-            ??? What is the size of our table?
-            There are 20 states...16 of which are final states 
-
-            ??? What is the enum of the start state
+            Question: 
+                    ⚬ What is the table size?
+                        There are 20 states...
+                    ⚬ What is the enum for the "start" state?
 
         ⚬ Mapped out the simple transitions: COMMA, RBRACK, LBRACK, SEMICOLON, RPAREN, LPAREN
 
@@ -35,7 +48,7 @@ DATE: 1/11/24
 
         ⚬ Mapped out OR & AND
 
-            ??? How to map out the alphabets
+            Question: How to map out the alphabets?
 
         ⚬ Wait until next class period for more information
 
@@ -48,21 +61,25 @@ DATE: 1/11/24
     
     1/17:
         ⚬ Should not use enum values because it does not align to the graph
-            ⚬ Just going to use the int values on the graph 
+            ⚬ Just going to use the integer values on the graph 
             ⚬ (DONE)
 
-        ⚬ Need to figure out how to assign _type to of type TokenType
+        ⚬ Need to figure out how to assign the private variable _type to type TokenType
 
     1/18:
         ⚬ Create a helper function that returns the corresponding TokenType values
         ⚬ Need to handle comments #
             ⚬ Wrote a function that determines if current character is a commment
-            ⚬ DONE: Can handle comments!
+            ⚬ (DONE) Can handle comments!
         ⚬ Need to fix line number when comments are encountered (DONE)
         ⚬ Need to stop the program if we reach the end of the file (DONE)
         ⚬ Need to check if valid ID is a reserved word (DONE)
+            ⚬ Create a function that returns the corresponding TokenType
+            ⚬ (DONE)
         ⚬ Making my own test case 
 
     1/19:
-        ⚬ Program cannot handle &&& or |||          s
-        
+        ⚬ Program cannot handle &&&, |||, &, |
+            ⚬ Forgot to return ERROR if the current state is not a final state -_-
+        ⚬ Convinced myself with my hard test case
+        ⚬ Cleaning up code
