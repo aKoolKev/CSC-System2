@@ -3,7 +3,7 @@
 
 using namespace std;
 
-
+//expr -> term expr2
 int expr(std::ifstream &is)
 {
     int termVal = term(is);
@@ -13,6 +13,7 @@ int expr(std::ifstream &is)
     return expr2Val;
 }
 
+//expr2 -> + term expr2 | - term expr2 | e
 int expr2(std::ifstream &is, int incomingValue)
 {
     int pos = is.tellg();
@@ -21,14 +22,14 @@ int expr2(std::ifstream &is, int incomingValue)
 
     int result = incomingValue; 
 
-    int termVal = term(is);
-
     if (pm.type() == PLUS)
     {
+        int termVal = term(is);
         result += termVal;
     }
     else if (pm.type() == MINUS)
     {
+        int termVal = term(is);
         result -= termVal;
     }
     else // epsilon case
@@ -40,6 +41,7 @@ int expr2(std::ifstream &is, int incomingValue)
     return expr2(is, result);
 }
 
+//term -> factor term2
 int term(std::ifstream &is)
 {
     int termVal = factor(is);
@@ -49,6 +51,7 @@ int term(std::ifstream &is)
     return term2Val;
 }
 
+// * factor term2 | / factor term2
 int term2(std::ifstream &is, int incomingValue)
 {
     int pos = is.tellg();
@@ -57,15 +60,15 @@ int term2(std::ifstream &is, int incomingValue)
 
     int result = incomingValue; 
 
-    int termVal = term(is);
-
     if (md.type() == MULTIPLY)
     {
-        result *= termVal;
+        int factorVal = factor(is);
+        result *= factorVal;
     }
     else if (md.type() == DIVIDE)
     {
-        result /= termVal;
+        int factorVal = factor(is);
+        result /= factorVal;
     }
     else // epsilon case
     {
@@ -76,7 +79,7 @@ int term2(std::ifstream &is, int incomingValue)
     return term2(is, result);
 }
 
-//factor number | (expr)
+//factor INTEGER | (<expr>)
 int factor(std::ifstream &is)
 {
     Token tok;
