@@ -1,0 +1,33 @@
+AUTHOR: Kevin Dong
+DATE: 1/29/24
+
+
+|PLATFORM|: 
+   ⚬ macOS, VS CODE
+
+
+|COMPILE DIRECTIONS|:
+
+
+
+|RUN PROGRAM DIRECTIONS|:
+
+
+|BUGS|:
+
+
+
+|SOLUTION APPROACH|:
+    ⚬ 
+
+
+|LOG|:
+
+    1/29:
+        ⚬ Review in class code
+        ⚬ Understand handout
+        ⚬ Import Project 1 Codes
+        ⚬ Creating Grammar.hpp
+            ⚬ Finish writing grammar defintion
+        ⚬ Handling     factor
+            ⚬ Modifying MakeFile  
