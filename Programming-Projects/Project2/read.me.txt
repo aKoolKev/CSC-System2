@@ -29,5 +29,41 @@ DATE: 1/29/24
         ⚬ Import Project 1 Codes
         ⚬ Creating Grammar.hpp
             ⚬ Finish writing grammar defintion
-        ⚬ Handling     factor
-            ⚬ Modifying MakeFile  
+        ⚬ Working on   factor
+            ⚬ Modifying MakeFile
+            ⚬ Seems like   factor works
+
+    1/30:
+        ⚬ Working on   exprlist 
+            ⚬ DONE?
+        ⚬ Working on   expr
+            ⚬ DONE?
+        ⚬ Working on   term
+            ⚬ DONE?
+
+        ⚬ Working on   simpexpr
+            ⚬ DONE?
+
+        ⚬ Working on   stmt
+            ⚬ DONE?
+
+        ⚬ Working on   compound
+            ⚬ DONE?
+
+        ⚬ Working on   stmtlist
+            ⚬ DONE?
+
+        ⚬ Working on   type
+            ⚬ DONE?
+
+        ⚬ Working on   idlist
+            ⚬ DONE?
+
+        ⚬ Working on   declaration
+            ⚬ DONE?
+
+        ⚬ Working on   program
+            ⚬ DONE?
+            ⚬ How do I know which one will be executed?    
+        
+        

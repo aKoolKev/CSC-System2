@@ -36,6 +36,12 @@ std::string compound(std::ifstream &);
 
 
 /* 
+    stmtlist -> stmt | stmt SEMICOLON stmtlist
+*/
+std::string stmtlist(std::ifstream &);
+
+
+/* 
     stmt -> ID| ID LPAREN exprlist RPAREN |
             ID ASSIGNOP expr |
             IF expr THEN compound ELSE compound |

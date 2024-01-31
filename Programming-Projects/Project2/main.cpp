@@ -14,6 +14,9 @@
 
 using namespace std;
 
+//global var that stores the token read from an input file
+string sourceCode;
+
 int main(int argc, char *argv[])
 {
   // check to make sure an input file was specified. 
@@ -35,10 +38,10 @@ int main(int argc, char *argv[])
 
 
   // *VERY* simple main function. Just repeatedly call Token's get method!
-  Token tok;
+  // Token tok;
 
-  // (try to) get the first token
-  tok.get(ifile);
+  // // (try to) get the first token
+  // tok.get(ifile);
 
   // did the last get call say there were more tokens? 
   // while( tok.type()!=EOF_TOK )
@@ -57,7 +60,7 @@ int main(int argc, char *argv[])
   //   tok.get(ifile);
   // }
 
-  cout << factor(ifile);
+  cout << "result"; program(ifile);
   
 
   return 0;
