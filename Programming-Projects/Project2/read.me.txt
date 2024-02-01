@@ -64,6 +64,19 @@ DATE: 1/29/24
 
         ⚬ Working on   program
             ⚬ DONE?
-            ⚬ How do I know which one will be executed?    
+            ⚬ How do I know which one will be executed?
+
+    1/31
+        ⚬ Changing all grammar defintions to return bool rather than strings
+            ⚬ Indicate if the grammar was successful or not 
+        ⚬ Working on Program 
+        ⚬ Need to get SEMICOLON to work
+           ⚬ Investigating     idlist
+        ⚬ Main should only pass in the token and the input file. It should not read the first token!!
+        ⚬ Work on  compound term
+
+        
+        
+
         
         

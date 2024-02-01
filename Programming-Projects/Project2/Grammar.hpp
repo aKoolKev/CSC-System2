@@ -1,44 +1,47 @@
 #ifndef _GRAMMAR_HPP_
 #define _GRAMMAR_HPP_
 
+#include "Token.hpp"
 #include <iostream>
 #include <fstream>
 
+//mine ...testing
+void printSourceFile();
 
 /* 
     program -> declaration program | compound
 */
-std::string program(std::ifstream &);
+bool program(Token, std::ifstream &);
 
 
 /* 
     declaration -> type idlist SEMICOLON
 */
-std::string declaration(std::ifstream &);
+bool declaration(Token, std::ifstream &);
 
 
 /* 
     idlist -> ID | ID COMMA idlist
 */
-std::string idlist(std::ifstream &);
+bool idlist(Token, std::ifstream &);
 
 
 /* 
     type -> INTEGER | FLOAT | VOID
 */
-std::string type(std::ifstream &);
+bool type(Token);
 
 
 /* 
     compound -> BEGIN stmtlist END
 */
-std::string compound(std::ifstream &);
+bool compound(Token, std::ifstream &);
 
 
 /* 
     stmtlist -> stmt | stmt SEMICOLON stmtlist
 */
-std::string stmtlist(std::ifstream &);
+bool stmtlist(std::ifstream &, Token);
 
 
 /* 
@@ -48,31 +51,31 @@ std::string stmtlist(std::ifstream &);
             WHILE LPAREN expr RPAREN compound |
             compound
 */
-std::string stmt(std::ifstream &);
+bool stmt(std::ifstream &, Token);
 
 
 /* 
     exprlist -> expr | expr COMMA exprlist
 */
-std::string exprlist(std::ifstream &);
+bool exprlist(std::ifstream &, Token);
 
 
 /* 
     expr -> simpexpr | simpexpr RELOP simpexpr
 */
-std::string expr(std::ifstream &);
+bool expr(std::ifstream &, Token);
 
 
 /* 
     simpexpr -> term | term ADDOP simpexpr
 */
-std::string simpexpr(std::ifstream &);
+bool simpexpr(std::ifstream &, Token);
 
 
 /* 
     term -> factor | factor MULOP term
 */
-std::string term(std::ifstream &);
+bool term(std::ifstream &);
 
 
 /* 
@@ -80,7 +83,7 @@ std::string term(std::ifstream &);
             NUM_REAL | NUM_INT
             LPAREN expr RPAREN
 */
-std::string factor(std::ifstream &);
+bool factor(std::ifstream &);
             
 
 #endif

@@ -3,51 +3,125 @@
 
 using namespace std;
 
+static string SourceFile;
 
-/* 
+void printSourceFile()
+{
+    cout << "[\n" << SourceFile << endl << "]\n\n";
+}
+
+
+/*  
     program -> declaration program | compound
 */
-string program(std::ifstream &ifile)
+bool program(Token tok, std::ifstream &ifile)
 {
-    string declaration_val = declaration(ifile);
-    string program_val = program(ifile);
-    string compound_val = compound(ifile);
+    cout << "try    declaration...\n";
+    int pos = ifile.tellg();
+
+    bool declaration_val = declaration(tok, ifile);
+
+    if (declaration_val)
+    {
+        cout << "declaration Y\n";
+        printSourceFile(); //debug
+
+        cout << "try    program...\n";
+        bool program_val = program(tok, ifile);
+
+        if(!program_val)
+        {
+            cout << "program N!\n";
+            return false;
+        }
+        else
+            cout << "program Y!\n";
+            return true;
+    }
+    else 
+    {
+        //declaration was unsuccessful, undo the move
+        ifile.seekg(pos);
+
+        cout << "try compound...";
+        bool compound_val = compound(tok, ifile);
+        if(compound_val)
+        {
+            cout << "compound Y\n";
+            return true;
+        }
+        else 
+            cout << "compound N\n";
+            return false;
+    }
+    
 }
 
 
 /* 
     declaration -> type idlist SEMICOLON
 */
-string declaration(std::ifstream &ifile )
+bool declaration(Token tok, std::ifstream &ifile)
 {
-    string type_val = type(ifile);
-    string idlist_val = idlist(ifile);
-
-    //read token
-    Token tok;
     tok.get(ifile);
+    cout << "try    type...\n";
+    bool type_val = type(tok);
 
-    if(tok.type() != SEMICOLON)
-        cout << "ERROR! Expected: SEMICOLON, got: " << tok << endl;
-    
-    //encountered SEMICOLON
-    
-    //WHAT TO RETURN??
-    return type_val + idlist_val;
+    if (type_val)
+    {
+        cout << "try Y\n";
+
+        cout << "try idlist...\n";
+        bool idlist_val = idlist(tok,ifile);
+
+        if (idlist_val)
+        {
+            printSourceFile();
+
+            //read token
+            //Token tok;
+            tok.get(ifile);
+            cout << "Read: " << tok.value() << endl;
+
+            if(tok.type() == SEMICOLON)
+            {
+                //encountered SEMICOLON
+                cout << "adding " << tok.value() << endl;
+                SourceFile += tok.value() + "\n"; //add ';'
+            
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+            return false;
+
+    }
+    else
+        return false;
+
+   
+
 }
 
 
 /* 
     idlist -> ID | ID COMMA idlist
 */
-std::string idlist(std::ifstream &ifile)
-{
-    Token tok; 
+bool idlist(Token tok, std::ifstream &ifile)
+{ //a,b,c;
+
     //read token
     tok.get(ifile);
+    cout << "idlist read: " << tok.value() << endl;
 
     if (tok.type() == ID)
     {
+        SourceFile += " " + tok.value(); //add the ID
+
         //remember index in input stream
         int pos = ifile.tellg();
 
@@ -56,98 +130,122 @@ std::string idlist(std::ifstream &ifile)
 
         if(tok.type() == COMMA)
         {
-            string idlist_val = idlist(ifile);
+            SourceFile += tok.value(); //add ','
+
+            bool idlist_val = idlist(tok,ifile);
 
             //UNSURE RETURN VALUE!!!
             return idlist_val;
         }
-        else // just ID
+        else
         {
             //unget token!!
+            cout << "Unget token!\n";
             ifile.seekg(pos);
 
-            //UNSURE RETURN VALUE!
-            return tok.value();
+            //Just ID
+            return true;
         }
 
+
     }
+    else //not an ID ... don't really need
+        return false;
+
 }
 
 
 /* 
     type -> INTEGER | FLOAT | VOID
 */
-std::string type(std::ifstream &ifile)
+bool type(Token tok)
 {
-    //read a token
-    Token tok;
-    tok.get(ifile);
+    cout << "read from type: " << tok << endl;
 
     if (tok.type() == INTEGER || tok.type() == FLOAT || tok.type() == VOID)
     {
-        return tok.value();
+        //debug
+        // cout << "type_val: " << tok.value() << endl;
+        cout << "adding: " << tok.value() << endl;
+        SourceFile += tok.value();
+
+        //return tok.value();
+        return true;
     }
     else
     {
         cout << "ERROR! EXPECTED {INTEGER, FLOAT, VOID}, got: " << tok << endl;
+        return false;
     }
 }
 
 /* 
     compound -> BEGIN stmtlist END
 */
-string compound(std::ifstream &ifile)
+bool compound(Token tok, std::ifstream &ifile)
 {
-    Token tok;
+    //Token tok;
     //read in token
     tok.get(ifile);
 
     if (tok.type() == BEGIN)
     {
-        string stmtlist_val = stmtlist(ifile);
+        SourceFile += "\n\n" + tok.value() + "\n";
+
+        bool stmtlist_val = stmtlist(ifile, tok);
 
         //read in next token...
         tok.get(ifile);
 
         if (tok.type() != END)
+        {
             cout << "ERROR! Expected: \"END,\" got: " << tok.value() << endl;
+            return false;
+        }
         
         //got END
 
         //UNSURE RETURN VAL
         return stmtlist_val;
     }
+    else
+        return false;
 }
 
 /* 
     stmtlist -> stmt | stmt SEMICOLON stmtlist
 */
-std::string stmtlist(std::ifstream &ifile)
+bool stmtlist(std::ifstream &ifile, Token tok)
 {
-    string stmt_val = stmt(ifile);
 
-    //remember index pos in input stream
-    int pos = ifile.tellg();
+    bool stmt_val = stmt(ifile, tok);
 
-    //read token...
-    Token tok;
-    tok.get(ifile);
-
-    if (tok.type() == SEMICOLON)
+    if (stmt_val)
     {
-        string stmtlist_val = stmtlist(ifile);
+        SourceFile += tok.value() + " ";
 
-        //UNSURE RETURN VALUE
-        return stmtlist_val;
-    }
-    else
-    {
-        //unget token!!
-        ifile.seekg(pos);
+        //remember index pos in input stream
+        int pos = ifile.tellg();
+        //read token...
+        tok.get(ifile);
 
-        //UNSURE return value!!
-        return stmt_val;
+        if (tok.type() == SEMICOLON)
+        {
+            bool stmtlist_val = stmtlist(ifile, tok);
+
+            //UNSURE RETURN VALUE
+            return stmtlist_val;
+        }
+        else
+        {
+            //unget token!!
+            cout << "unget token!\n";
+            ifile.seekg(pos);
+            
+            return true; // Just    stmt
+        }
     }
+
 }
 
 
@@ -158,69 +256,74 @@ std::string stmtlist(std::ifstream &ifile)
             WHILE LPAREN expr RPAREN compound |
             compound
 */
-std::string stmt(std::ifstream &ifile)
+bool stmt(std::ifstream &ifile, Token tok)
 {
-
+    //might have to undo move if unsucessful
     int pos = ifile.tellg();
 
     //get a token
-    Token tok;
     tok.get(ifile);
     
     if(tok.type() == ID)
     {
+        SourceFile += tok.value() + " "; // ID
+
         //see if there is anything else after ID
         tok.get(ifile);
         pos = ifile.tellg();
 
         if (tok.type() == LPAREN)
         {
-            string exprlist_val = exprlist(ifile);
+            bool exprlist_val = exprlist(ifile, tok);
 
             pos = ifile.tellg();
             //read next token
             tok.get(ifile);
 
             //expect RPAREN
-            if (tok.type() != RPAREN)
+            if (tok.type() == RPAREN)
+                return true;
+            else
             {
-                cout << "Expected ')', got : " << tok << endl;
-
+            
                 //unget the token!
                 ifile.seekg(pos);
+                return false;
             }
 
-            return tok.value();
+        }
+
+            // return tok.value();
+            return true;
             //UNSURE what to return here???
-        }
-        // ID ASSIGNOP expr 
-        else if (tok.type() == ASSIGNOP) 
-        {
-            tok.get(ifile);
-            string expr_val = expr(ifile);
-            //do I return a value here?
-            return expr_val;
-        }
-        else // just an ID
-        {
-            //unget token!
-            ifile.seekg(pos);
-            
-            //UNSURE return value!!!
-            return tok.value();
-        }
+    }
+    // ID ASSIGNOP expr 
+    else if (tok.type() == ASSIGNOP) 
+    {
+        tok.get(ifile);
+        bool expr_val = expr(ifile, tok);
+        //do I return a value here?
+        return expr_val;
+    
+    
+        //unget token!
+        ifile.seekg(pos);
+        
+        //UNSURE return value!!!
+        // return tok.value();
+        return true;
     }
     //IF expr THEN compound ELSE compound |
     else if (tok.type() == IF)
     {
-        string expr_val = expr(ifile);
+        bool expr_val = expr(ifile, tok);
 
         //read next token
         tok.get(ifile);
 
         if (tok.type() == THEN)
         {
-            string compound_val = compound(ifile);
+            bool compound_val = compound(tok,ifile);
         }
         else //did not get THEN
         {
@@ -237,7 +340,7 @@ std::string stmt(std::ifstream &ifile)
 
         if (tok.type() == LPAREN)
         {
-            string expr_val = expr(ifile);
+            bool expr_val = expr(ifile, tok);
 
             //read next token
             tok.get(ifile);
@@ -246,7 +349,7 @@ std::string stmt(std::ifstream &ifile)
                 cerr << "Expected ')', got: " << tok << endl;
             
             //got a RPAREN
-            string compound_val = compound(ifile);
+            bool compound_val = compound(tok, ifile);
 
             //UNSURE RETURN VALUE!!!
             return compound_val;
@@ -256,7 +359,7 @@ std::string stmt(std::ifstream &ifile)
     //compound  ...UNSURE!!!
     else 
     {
-        string compound_val = compound(ifile);
+        bool compound_val = compound(tok, ifile);
         // UNSURE...return value??
         return compound_val;
     }
@@ -267,20 +370,19 @@ std::string stmt(std::ifstream &ifile)
 /* 
     exprlist -> expr | expr COMMA exprlist
 */
-std::string exprlist(std::ifstream &ifile)
+bool exprlist(std::ifstream &ifile, Token tok)
 {
-    string expr_val = expr (ifile);
+    bool expr_val = expr (ifile, tok);
 
     // remember index in the input stream
     int pos = ifile.tellg(); 
 
     //try to read next token
-    Token commaTok;
-    commaTok.get(ifile);
+    tok.get(ifile);
 
-    if(commaTok.type() == COMMA)
+    if(tok.type() == COMMA)
     {
-        string exprlist_val = exprlist(ifile); //UNSURE
+        bool exprlist_val = exprlist(ifile, tok); //UNSURE
 
         //UNSURE RETURN VALUE
         return exprlist_val;
@@ -300,19 +402,19 @@ std::string exprlist(std::ifstream &ifile)
 /* 
     expr -> simpexpr | simpexpr RELOP simpexpr
 */
-std::string expr(std::ifstream &ifile)
+bool expr(std::ifstream &ifile, Token tok)
 {
-    string simpexpr_val = simpexpr(ifile);
+    bool simpexpr_val = simpexpr(ifile, tok);
 
     //remember index position in the input file
     int pos = ifile.tellg();
 
-    Token relopTok;
-    relopTok.get(ifile);
+    
+    tok.get(ifile);
 
-    if (relopTok.type() == RELOP)
+    if (tok.type() == RELOP)
     {
-        simpexpr_val = simpexpr(ifile);        
+        simpexpr_val = simpexpr(ifile, tok);        
     }
     else // unget 
     {
@@ -325,20 +427,19 @@ std::string expr(std::ifstream &ifile)
 /* 
     simpexpr -> term | term ADDOP simpexpr
 */
-std::string simpexpr(std::ifstream &ifile)
+bool simpexpr(std::ifstream &ifile, Token tok)
 {
-    string term_val = term(ifile);
+    bool term_val = term(ifile);
 
     //remember pos
     int pos = ifile.tellg();
 
     //read next token
-    Token addopTok;
-    addopTok.get(ifile);
+    tok.get(ifile);
 
-    if (addopTok.type() == ADDOP)
+    if (tok.type() == ADDOP)
     {
-        string simpexpr_val = simpexpr(ifile);
+        bool simpexpr_val = simpexpr(ifile, tok);
 
         //UNSURE RETURN VALUE
         return simpexpr_val;
@@ -355,9 +456,9 @@ std::string simpexpr(std::ifstream &ifile)
 /* 
     term -> factor | factor MULOP term
 */
-std::string term(std::ifstream &ifile)
+bool term(std::ifstream &ifile)
 {
-    string factor_val = factor(ifile);
+    bool factor_val = factor(ifile);
 
     //remember location
     int pos = ifile.tellg();
@@ -367,7 +468,7 @@ std::string term(std::ifstream &ifile)
 
     if (mulopTok.type() == MULOP)
     {
-        string term_val = term(ifile);
+        bool term_val = term(ifile);
     }
     else //unget token!
     {
@@ -385,7 +486,7 @@ std::string term(std::ifstream &ifile)
             NUM_REAL | NUM_INT
             LPAREN expr RPAREN
 */
-string factor(std::ifstream &ifile)
+bool factor(std::ifstream &ifile)
 {
     //try to read a token for input file
     Token tok;
@@ -401,7 +502,7 @@ string factor(std::ifstream &ifile)
         
         if (tok.type() == LPAREN) //ID LPAREN exprlist RPAREN
         {
-            string parenVal = exprlist(ifile); //UNSURE!!!
+            bool parenVal = exprlist(ifile, tok); //UNSURE!!!
 
             //read next token
             tok.get(ifile);
@@ -415,18 +516,20 @@ string factor(std::ifstream &ifile)
         }
         else //ID
         {
-            return val;
+            return true;
+            // return val;
         }
     }
     //NUM_REAL || NUM_INT
     else if (tok.type() == NUM_REAL || tok.type() == NUM_INT )
     {
-        return tok.value();
+        return true;
+        // return tok.value();
     }
     //LPAREN expr RPAREN
     else if (tok.type() == LPAREN)
     {
-        string parenVal = expr(ifile); //UNSURE!!!
+        bool parenVal = expr(ifile, tok); //UNSURE!!!
 
         //read next token
         tok.get(ifile);
