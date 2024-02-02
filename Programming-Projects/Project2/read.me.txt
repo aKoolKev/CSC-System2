@@ -95,6 +95,14 @@ DATE: 1/29/24
             ⚬ should work now...
         ⚬ Working on   term
 
+    2/2:
+        ⚬ I must be ungetting the token in the wrong places!
+            ⚬ Go through each grammar again
+            ⚬ ungetting at wrong places >:(
+            ⚬ It works!
+            
+        ⚬ Need to beautify code
+
 
         
        
