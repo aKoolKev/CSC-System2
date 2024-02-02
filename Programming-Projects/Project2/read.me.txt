@@ -76,6 +76,29 @@ DATE: 1/29/24
         ⚬ Work on  compound term
 
         
+    2/1
+        ⚬ Revisting    exprlist
+            ⚬ should work now...
+        ⚬ Revisiting   expr
+            ⚬ should work now...
+        ⚬ Revisting    stmt
+            ⚬ still need to finish     ID | ID LPAREN exprlist RPAREN
+            ⚬ working on -> IF
+                ⚬ should work now...
+            ⚬ working on -> WHILE
+                ⚬ should work now...
+            ⚬ working on -> compound
+                ⚬ should work now..,
+            ⚬ working on -> ID
+
+        ⚬ Need to revist simpexpr
+            ⚬ should work now...
+        ⚬ Working on   term
+
+
+        
+       
+
         
 
         

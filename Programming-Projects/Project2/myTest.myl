@@ -1,0 +1,1 @@
+int i1,i2,i3;float f1,f2,f3;void v1,v2,v3; begin if i1+f1==v1 then begin func(1==1,a>b,a+b,a/b);Func2 end else begin oops(bad,idea)end;while(a+b*c+1>=1)begin cool end end

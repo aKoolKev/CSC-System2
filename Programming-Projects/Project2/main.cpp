@@ -67,11 +67,11 @@ int main(int argc, char *argv[])
 
   if (successful)
   {
-    cout << "# successful code =========================\n";
+    cout << "\n# successful code =========================\n";
     printSourceFile();
   }
   else
-    cout << "# UNsuccessful code =========================\n";
+    cout << "\n# UNsuccessful code =========================\n";
     printSourceFile(); //get rid of when finished
 
 

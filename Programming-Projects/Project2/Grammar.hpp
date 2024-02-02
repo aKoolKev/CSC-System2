@@ -75,7 +75,7 @@ bool simpexpr(std::ifstream &, Token);
 /* 
     term -> factor | factor MULOP term
 */
-bool term(std::ifstream &);
+bool term(std::ifstream &, Token);
 
 
 /* 
@@ -83,7 +83,7 @@ bool term(std::ifstream &);
             NUM_REAL | NUM_INT
             LPAREN expr RPAREN
 */
-bool factor(std::ifstream &);
+bool factor(std::ifstream &, Token);
             
 
 #endif
