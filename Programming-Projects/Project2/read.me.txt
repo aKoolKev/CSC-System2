@@ -31,6 +31,7 @@ DATE: 1/29/24
             ⚬ Finish writing grammar defintion
         ⚬ Working on   factor
             ⚬ Modifying MakeFile
+
             ⚬ Seems like   factor works
 
     1/30:
@@ -107,6 +108,30 @@ DATE: 1/29/24
             ⚬ After BEGIN, IF, ELSE
         
     2/5:
-        ⚬ 
-        ⚬ When to untab: 
-            ⚬ END
+        ⚬ Keep a tab counter
+
+        PLAN
+            ⚬ Increment when it encounters (print token then increment counter)
+                ⚬ BEGIN
+                ⚬ IF
+                ⚬ ELSE
+
+            ⚬ Decrement when it encounters (decrement then print)
+                ⚬ END
+
+        ⚬ Working on incrementing tabs
+            ⚬ still working on it
+            ⚬ off by one 
+            ⚬ need to address c = c - b
+                ⚬ done!
+            ⚬ it works!!!
+
+        ⚬ Working on decrementing tabs
+            ⚬ need to address "end"
+                ⚬ fixed
+            ⚬ need to address "end;"
+            ⚬ I treated while as a whole block
+            ⚬ done!
+
+        ⚬ TMR: clean/finalize code
+

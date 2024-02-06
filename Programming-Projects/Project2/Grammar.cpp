@@ -13,10 +13,9 @@ void printSourceFile()
 
 void insertTab(int numTabs)
 {
-    for (int i=0; i < numTabs; i++)
-        SourceFile += "   ";
+    for (int i=1; i < numTabs; i++)
+        SourceFile += "_.";
 }
-
 
 
 /*  
@@ -105,6 +104,7 @@ bool idlist(Token tok, std::ifstream &ifile)
 
     if (tok.type() == ID) // -> ID
     {
+        insertTab(tabAmount);
         SourceFile += tok.value(); //add the ID
 
         //read next token...
@@ -143,10 +143,8 @@ bool idlist(Token tok, std::ifstream &ifile)
     type -> INTEGER | FLOAT | VOID
 */
 bool type(Token tok)
-{
-    
+{ 
     //don't read token, declaration already did for us
-
     if (tok.type() == INTEGER || tok.type() == FLOAT || tok.type() == VOID)
     {
         SourceFile += tok.value() + " ";
@@ -167,14 +165,17 @@ bool compound(Token tok, std::ifstream &ifile)
 
     if (tok.type() == BEGIN) // -> BEGIN
     {
+        SourceFile += "\n";
         tabAmount++;
-        int currTabNum = tabAmount;
-        cout << "currTabNum: " << currTabNum << endl;
-        insertTab(currTabNum);
+        insertTab(tabAmount);
 
-        SourceFile += "\n" + tok.value() + "\n"; // add "begin"
+        cout << "begin tabAmount: " << tabAmount << endl;
 
-    
+        SourceFile += tok.value() + "\n"; // add "begin"
+
+        tabAmount++; // BIG MOMENT...
+        
+
         bool stmtlist_val = stmtlist(ifile, tok);
 
         if (stmtlist_val) // -> BEGIN stmtlist
@@ -185,13 +186,24 @@ bool compound(Token tok, std::ifstream &ifile)
 
             if (tok.type() == END) // -> BEGIN stmtlist END
             {
-                SourceFile += "\n\n" + tok.value() + "\n"; //add "end"
+                SourceFile += "\n";
+                cout << "end curr tabAmount: " << tabAmount << endl;
+                if (tabAmount >= 4)
+                {
+                    tabAmount--; 
+                }
+                else if (tabAmount == 3)
+                    tabAmount-=2;
+                
+                insertTab(tabAmount);
+                SourceFile += tok.value(); //add "end"
+                cout << "end new tabAmount: " << tabAmount << endl;
+                
+               
                 return true;
             }
-            else //not end...unget!
-            {
+            else //not end 
                 return false;
-            }
 
         } // stmtlist failed
         else
@@ -220,16 +232,14 @@ bool stmtlist(std::ifstream &ifile, Token tok)
 
         if (tok.type() == SEMICOLON) // -> stmt SEMICOLON
         {
-            SourceFile += tok.value() + "\n";
+            SourceFile += tok.value() + '\n';
 
             bool stmtlist_val = stmtlist(ifile, tok);
 
             if (stmtlist_val) // -> stmt SEMICOLON stmtlist
                 return true;
             else
-            {
                 return false;
-            }
         }
         else // not SEMICOLON...unget token
         {
@@ -257,6 +267,8 @@ bool stmt(std::ifstream &ifile, Token tok)
     
     if(tok.type() == ID)  // -> ID
     {
+        insertTab(tabAmount);
+        cout << "stmt currTabAmount: " << tabAmount << endl;
         SourceFile += tok.value(); // add ID
 
         //read next token...
@@ -309,9 +321,8 @@ bool stmt(std::ifstream &ifile, Token tok)
     }
     else if (tok.type() == IF) // -> IF
     {
-        tabAmount++;
-        int currTabNum = tabAmount;
-        insertTab(currTabNum);
+        cout << "if tabAmount: " << tabAmount << endl;
+        insertTab(tabAmount);
         
         SourceFile += tok.value() + " "; //adding "if"
 
@@ -337,20 +348,22 @@ bool stmt(std::ifstream &ifile, Token tok)
 
                     if (tok.type() == ELSE) // -> IF expr THEN compound ELSE
                     {
-                        tabAmount++;
-                        int currTabNum = tabAmount;
-                        insertTab(currTabNum);
+                        SourceFile += '\n';
+                        tabAmount--;
+                        cout << "else tabAmount: " << tabAmount << endl;
+                        insertTab(tabAmount);
 
-                        SourceFile += tok.value() + " "; //add "else"
+                        SourceFile += tok.value(); //add "else"
 
                         compound_val = compound(tok, ifile);
-
+        
                         if (compound_val) // -> IF expr THEN compound ELSE compound
-                            return true;
-                        else
                         {
-                            return false;
+                            tabAmount--;
+                            return true;
                         }
+                        else
+                            return false;
 
                     }
                     else // not ELSE...unget
@@ -381,10 +394,9 @@ bool stmt(std::ifstream &ifile, Token tok)
     } // not an IF
     else if (tok.type() == WHILE) // -> WHILE
     {
-        tabAmount++;
-        int currTabNum = tabAmount;
-        insertTab(currTabNum);
-
+        // tabAmount++;
+        cout << "while tabAmount: " << tabAmount << endl;
+        insertTab(tabAmount);
         SourceFile += tok.value() + " "; // add "while"
 
         //get next token 
@@ -405,7 +417,7 @@ bool stmt(std::ifstream &ifile, Token tok)
 
                 if(tok.type() == RPAREN) // -> WHILE LPAREN expr RPAREN
                 {
-                    SourceFile += " " + tok.value() + " "; // add ')'
+                    SourceFile += " " + tok.value(); // add ')'
 
                     bool compound_val = compound(tok, ifile);
 
@@ -514,7 +526,6 @@ bool expr(std::ifstream &ifile, Token tok)
         else //not RELOP...unget
         {
             ifile.seekg(pos);
-            
             return true;    // -> simpexpr
         }
 
@@ -545,9 +556,7 @@ bool simpexpr(std::ifstream &ifile, Token tok)
             if (simpexpr_val) // -> term ADDOP simpexpr
                 return true;
             else //simpexpr failed
-            {
                 return false;
-            }
         }
         else // not ADDOP... unget! 
         {
