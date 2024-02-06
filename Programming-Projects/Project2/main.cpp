@@ -1,21 +1,17 @@
 /*******************************************
  * File: main.cpp                          *
- * Author: S. Blythe                       *
- * Date: 12/2023                           *
- * PURPOSE: driver file for project 1      *
+ * Author: Kevin Dong                      *
+ * Date: 1/29/23                           *
+ * PURPOSE: Driver for Project2            *
  *******************************************/
-
 
 #include <iostream>
 #include <fstream>
 
-#include "Token.hpp"
 #include "Grammar.hpp"
+#include "Token.hpp"
 
 using namespace std;
-
-//global var that stores the token read from an input file
-string sourceCode;
 
 int main(int argc, char *argv[])
 {
@@ -36,49 +32,19 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-
-  // // *VERY* simple main function. Just repeatedly call Token's get method!
   Token tok;
 
-  // // (try to) get the first token
-  // tok.get(ifile);
-
-  // //did the last get call say there were more tokens? 
-  // while( tok.type()!=EOF_TOK )
-  // {
-  //   if (tok.type()!=ERROR)
-	//   {
-	//     // print out the successfully read Token
-	//     cout << "MAIN: Resulting token = " << tok << endl;
-
-  //     program(tok, ifile);
-	//   }
-  //   else // tok.type()==ERROR
-	//   {
-	//     cout << "Syntax error detected on line " << tok.lineNumber() << endl;
-	//   }
-    
-  //   printSourceFile();
-  //   // (try to) get the next token 
-  //   tok.get(ifile);
-  // }
-
+  //start parsing and stores the result
   bool successful = program(tok, ifile);
 
+  // it worked...print out the "beautified" code
   if (successful)
   {
     cout << "\n# successful code =========================\n";
     printSourceFile();
   }
-  else
+  else // failed...just indicate such
     cout << "\n# UNsuccessful code =========================\n";
-    printSourceFile(); //get rid of when finished
-
-
-
-
-  
-  
 
   return 0;
 }

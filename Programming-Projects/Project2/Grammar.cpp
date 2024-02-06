@@ -3,12 +3,20 @@
 
 using namespace std;
 
-static string SourceFile;
+static string SourceFile; //store the beautified code
+int tabAmount = 0; // number of indentations
 
 void printSourceFile()
 {
-    cout << "[\n" << SourceFile << endl << "]\n\n";
+    cout << SourceFile << endl << "\n\n";
 }
+
+void insertTab(int numTabs)
+{
+    for (int i=0; i < numTabs; i++)
+        SourceFile += "   ";
+}
+
 
 
 /*  
@@ -24,14 +32,13 @@ bool program(Token tok, std::ifstream &ifile)
 
     if (declaration_val) // -> declaration 
     {
-
         bool program_val = program(tok, ifile); // -> declaration program
 
         if(program_val)
             return true;
         else // program failed
             return false;
-            
+
     }
     else  // declaration failed...
     {
@@ -98,7 +105,7 @@ bool idlist(Token tok, std::ifstream &ifile)
 
     if (tok.type() == ID) // -> ID
     {
-        SourceFile += " " + tok.value(); //add the ID
+        SourceFile += tok.value(); //add the ID
 
         //read next token...
         pos = ifile.tellg();
@@ -160,8 +167,14 @@ bool compound(Token tok, std::ifstream &ifile)
 
     if (tok.type() == BEGIN) // -> BEGIN
     {
-        SourceFile += "\n\n" + tok.value() + "\n  "; // add "begin"
+        tabAmount++;
+        int currTabNum = tabAmount;
+        cout << "currTabNum: " << currTabNum << endl;
+        insertTab(currTabNum);
 
+        SourceFile += "\n" + tok.value() + "\n"; // add "begin"
+
+    
         bool stmtlist_val = stmtlist(ifile, tok);
 
         if (stmtlist_val) // -> BEGIN stmtlist
@@ -172,7 +185,7 @@ bool compound(Token tok, std::ifstream &ifile)
 
             if (tok.type() == END) // -> BEGIN stmtlist END
             {
-                SourceFile += "\n\n" + tok.value(); //add "end"
+                SourceFile += "\n\n" + tok.value() + "\n"; //add "end"
                 return true;
             }
             else //not end...unget!
@@ -207,7 +220,7 @@ bool stmtlist(std::ifstream &ifile, Token tok)
 
         if (tok.type() == SEMICOLON) // -> stmt SEMICOLON
         {
-            SourceFile += tok.value() + " ";
+            SourceFile += tok.value() + "\n";
 
             bool stmtlist_val = stmtlist(ifile, tok);
 
@@ -244,7 +257,7 @@ bool stmt(std::ifstream &ifile, Token tok)
     
     if(tok.type() == ID)  // -> ID
     {
-        SourceFile += tok.value() + " "; // add ID
+        SourceFile += tok.value(); // add ID
 
         //read next token...
         pos = ifile.tellg();
@@ -264,7 +277,7 @@ bool stmt(std::ifstream &ifile, Token tok)
 
                 if (tok.type() == RPAREN) // -> ID LPAREN exprlist RPAREN
                 {
-                    SourceFile += tok.value() + " "; //add RPAREN
+                    SourceFile += " " + tok.value() + " "; //add RPAREN
                     return true;
                 }
                 else //not RPAREN...unget
@@ -281,7 +294,7 @@ bool stmt(std::ifstream &ifile, Token tok)
         // not LPAREN...unget token...check if it is ASSIGNOP
         else if (tok.type() == ASSIGNOP)  // -> ID ASSIGNOP
         {
-            SourceFile += tok.value(); // adding '='
+            SourceFile += ' ' + tok.value() + ' '; // adding '='
 
             bool expr_val = expr(ifile, tok);
 
@@ -296,13 +309,16 @@ bool stmt(std::ifstream &ifile, Token tok)
     }
     else if (tok.type() == IF) // -> IF
     {
+        tabAmount++;
+        int currTabNum = tabAmount;
+        insertTab(currTabNum);
+        
         SourceFile += tok.value() + " "; //adding "if"
 
         bool expr_val = expr(ifile, tok);
 
         if (expr_val) // -> IF expr
         {
-
             //read next token
             pos = ifile.tellg();
             tok.get(ifile);
@@ -321,6 +337,10 @@ bool stmt(std::ifstream &ifile, Token tok)
 
                     if (tok.type() == ELSE) // -> IF expr THEN compound ELSE
                     {
+                        tabAmount++;
+                        int currTabNum = tabAmount;
+                        insertTab(currTabNum);
+
                         SourceFile += tok.value() + " "; //add "else"
 
                         compound_val = compound(tok, ifile);
@@ -361,6 +381,10 @@ bool stmt(std::ifstream &ifile, Token tok)
     } // not an IF
     else if (tok.type() == WHILE) // -> WHILE
     {
+        tabAmount++;
+        int currTabNum = tabAmount;
+        insertTab(currTabNum);
+
         SourceFile += tok.value() + " "; // add "while"
 
         //get next token 
@@ -381,22 +405,19 @@ bool stmt(std::ifstream &ifile, Token tok)
 
                 if(tok.type() == RPAREN) // -> WHILE LPAREN expr RPAREN
                 {
-                    SourceFile += tok.value() + " "; // add ')'
+                    SourceFile += " " + tok.value() + " "; // add ')'
 
                     bool compound_val = compound(tok, ifile);
 
                     if (compound_val) // -> WHILE LPAREN expr RPAREN compound
                         return true;
+
                     else // compound failed
-                    {
                         return false;
-                    }
 
                 }
                 else // did not read RPAREN... unget!
-                {
                     return false;
-                }
             }
             else //expr failed
             {
@@ -517,7 +538,7 @@ bool simpexpr(std::ifstream &ifile, Token tok)
 
         if (tok.type() == ADDOP) // -> term ADDOP
         {
-            SourceFile += tok.value() + " "; // add ADDOP
+            SourceFile += + " " + tok.value() + " "; // add ADDOP
 
             bool simpexpr_val = simpexpr(ifile, tok);
 
@@ -554,7 +575,7 @@ bool term(std::ifstream &ifile, Token tok)
 
         if (tok.type() == MULOP) // -> factor MULOP 
         {
-            SourceFile += tok.value() + " "; // adding MULOP
+            SourceFile += " " + tok.value() + " "; // adding MULOP
 
             bool term_val = term(ifile, tok);
 
@@ -593,7 +614,7 @@ bool factor(std::ifstream &ifile, Token tok)
     
     if (tok.type() == ID) // -> ID
     {
-        SourceFile += tok.value() + " "; // addding ID
+        SourceFile += tok.value(); // addding ID
 
         //read next token
         pos = ifile.tellg();
@@ -613,7 +634,7 @@ bool factor(std::ifstream &ifile, Token tok)
 
                 if (tok.type() == RPAREN) // -> ID LPAREN exprlist RPAREN
                 {
-                    SourceFile += tok.value() + " "; // adding ')'
+                    SourceFile +=  " " + tok.value() + " "; // adding ')'
                     return true;
                 }
                 else // not RPAREN...unget
@@ -651,7 +672,7 @@ bool factor(std::ifstream &ifile, Token tok)
 
             if (tok.type() == RPAREN) // -> LPAREN expr RPAREN
             {
-                SourceFile += tok.value() + " "; // adding RPAREN
+                SourceFile +=  " " + tok.value() + " "; // adding RPAREN
                 return true;
             }
             else // not RPAREN...unget

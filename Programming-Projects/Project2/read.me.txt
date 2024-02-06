@@ -100,14 +100,13 @@ DATE: 1/29/24
             ⚬ Go through each grammar again
             ⚬ ungetting at wrong places >:(
             ⚬ It works!
-            
+
         ⚬ Need to beautify code
 
-
+        ⚬ When to tab:
+            ⚬ After BEGIN, IF, ELSE
         
-       
-
-        
-
-        
-        
+    2/5:
+        ⚬ 
+        ⚬ When to untab: 
+            ⚬ END
