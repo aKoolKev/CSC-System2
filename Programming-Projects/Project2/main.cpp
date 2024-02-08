@@ -1,8 +1,11 @@
 /*******************************************
  * File: main.cpp                          *
  * Author: Kevin Dong                      *
- * Date: 1/29/23                           *
- * PURPOSE: Driver for Project2            *
+ * Date: 1/29/24                           *
+ * PURPOSE:                                *
+ *   - Building a parser                   *
+ *   - Implementation of a grammar         *
+ *   - Writing a “code beautifier          *
  *******************************************/
 
 #include <iostream>
@@ -15,7 +18,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  // check to make sure an input file was specified. 
+  // make sure input file was specified
   if (argc!=2)
   {
     cerr << "USAGE: " << argv[0] << " <file>" << endl;
@@ -32,18 +35,19 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  // create an initial Token object
   Token tok;
 
-  //start parsing and stores the result
+  // start parsing and stores the result (sucessful or failed)
   bool successful = program(tok, ifile);
 
-  // it worked...print out the "beautified" code
+  // parsing was successful...print out the "beautified" code
   if (successful)
   {
     cout << "\n# successful code =========================\n";
     printSourceFile();
   }
-  else // failed...just indicate such
+  else // parsing failed...just indicate such
     cout << "\n# UNsuccessful code =========================\n";
 
   return 0;

@@ -1,3 +1,9 @@
+//File: Grammar.hpp
+//Author: Kevin Dong
+//Date: 1/29/24
+//Purpose: Definitions of the grammars
+
+
 #ifndef _GRAMMAR_HPP_
 #define _GRAMMAR_HPP_
 
@@ -5,8 +11,11 @@
 #include <iostream>
 #include <fstream>
 
-//mine ...testing
+// function that prints the "beautified" code
 void printSourceFile();
+
+
+// THE GRAMMARS BELOW:
 
 /* 
     program -> declaration program | compound

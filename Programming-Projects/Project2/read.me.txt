@@ -3,22 +3,29 @@ DATE: 1/29/24
 
 
 |PLATFORM|: 
-   ⚬ macOS, VS CODE
+    ⚬ macOS, VS CODE
 
 
 |COMPILE DIRECTIONS|:
-
-
+    ⚬ Use the provided makeFile to compile program
+        ⚬ Executable name: run
 
 |RUN PROGRAM DIRECTIONS|:
-
+    ⚬ Must include an input file on command line
 
 |BUGS|:
-
+    ⚬ Not a bug, but my program does not indent on WHILE
+    ⚬ Program can reread successful beautify code. However that does not mean all grammar are correct.
+        ⚬ I believe I tested all the grammars, but there exists cases I might of missed.
 
 
 |SOLUTION APPROACH|:
-    ⚬ 
+    ⚬ Create Grammar hpp and cpp file
+    ⚬ Reuse lexical analayzer from my project 1
+    ⚬ Work bottom up on the grammar list
+    ⚬ Run program
+    ⚬ Rewrite each grammar (ungetting at wrong place)
+    ⚬ Beautify code by keeping track of number of indentations
 
 
 |LOG|:
@@ -29,10 +36,9 @@ DATE: 1/29/24
         ⚬ Import Project 1 Codes
         ⚬ Creating Grammar.hpp
             ⚬ Finish writing grammar defintion
-        ⚬ Working on   factor
+        ⚬ Working on "factor"
             ⚬ Modifying MakeFile
-
-            ⚬ Seems like   factor works
+            ⚬ Seems like "factor" works
 
     1/30:
         ⚬ Working on   exprlist 
@@ -41,40 +47,32 @@ DATE: 1/29/24
             ⚬ DONE?
         ⚬ Working on   term
             ⚬ DONE?
-
         ⚬ Working on   simpexpr
             ⚬ DONE?
-
         ⚬ Working on   stmt
             ⚬ DONE?
-
         ⚬ Working on   compound
             ⚬ DONE?
-
         ⚬ Working on   stmtlist
             ⚬ DONE?
-
         ⚬ Working on   type
             ⚬ DONE?
-
         ⚬ Working on   idlist
             ⚬ DONE?
-
         ⚬ Working on   declaration
             ⚬ DONE?
-
         ⚬ Working on   program
             ⚬ DONE?
             ⚬ How do I know which one will be executed?
 
     1/31
         ⚬ Changing all grammar defintions to return bool rather than strings
-            ⚬ Indicate if the grammar was successful or not 
-        ⚬ Working on Program 
+            ⚬ Easier to indicate if parsar was successful or not 
+        ⚬ Working on Program again
         ⚬ Need to get SEMICOLON to work
            ⚬ Investigating     idlist
         ⚬ Main should only pass in the token and the input file. It should not read the first token!!
-        ⚬ Work on  compound term
+        ⚬ Work on compound again
 
         
     2/1
@@ -99,8 +97,8 @@ DATE: 1/29/24
     2/2:
         ⚬ I must be ungetting the token in the wrong places!
             ⚬ Go through each grammar again
-            ⚬ ungetting at wrong places >:(
-            ⚬ It works!
+                ⚬ was ungetting tokens at wrong places >:(
+            ⚬ It works now!!
 
         ⚬ Need to beautify code
 
@@ -130,8 +128,17 @@ DATE: 1/29/24
             ⚬ need to address "end"
                 ⚬ fixed
             ⚬ need to address "end;"
-            ⚬ I treated while as a whole block
             ⚬ done!
 
         ⚬ TMR: clean/finalize code
+
+    2/6:
+        ⚬ Need to fix space issues
+
+    2/7: 
+        ⚬ Cleaning code and finalizing project
+
+*** "Thank you for breaking this project into two projects.
+     I don't think I would had finish in time if it wasn't." 
+                                                        - KD
 
