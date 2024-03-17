@@ -1,0 +1,55 @@
+AUTHOR: Kevin Dong
+DATE: 3/14/24 (Pi Day!)
+
+
+|PLATFORM|: 
+    ⚬ macOS, VS CODE
+
+
+|COMPILE DIRECTIONS|:
+    ⚬ Use the provided makeFile to compile program
+        ⚬ Executable name: run
+
+|RUN PROGRAM DIRECTIONS|:
+
+|BUGS|:
+
+
+|SOLUTION APPROACH|:
+
+
+|LOG|:
+
+    3/14/24:
+        ⚬ Understand problem statement
+        ⚬ Import over the Lexical Analyzer (from project1) and recursive descent parser (from project2).
+        ⚬ Support the new BNF grammar in the grammar class 
+            ⚬ Make change to recursive descent parser code  
+            ⚬ Pseudocode: 
+                1. Prompt for block size
+                2. Prompt for input file name
+                3. Create an ifstream object
+                4. Pass it into Grammar class
+                    4a. Keep reading from file until end of file
+                    4b. Try to match the grammar
+                    4c. If it matches a grammar, run the associated method
+                            Q: Should I include the command in the grammar class or make it it's own class?
+
+
+        ⚬ Write the grammar definition
+            ⚬ Done!
+            ⚬ Test the Lexical Analyzer...
+                ⚬ Works! :D
+            ⚬ Test Recursive descent works...
+                ⚬ Works! :D
+
+
+        
+        ⚬ Can detect when to call free(variableName)
+            ⚬ Not what to code for it
+
+    3/16/24: 
+        ⚬ Be able to detect alloc()
+
+
+
