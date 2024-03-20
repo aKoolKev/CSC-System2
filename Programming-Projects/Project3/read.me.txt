@@ -50,6 +50,49 @@ DATE: 3/14/24 (Pi Day!)
 
     3/16/24: 
         ⚬ Be able to detect alloc()
+            ⚬ Can correct detect ID = alloc(NUM_INT) :D
+        ⚬ Be able to detect ID = ID
+            ⚬ It works!
+
+        ⚬ Each block
+            ⚬ size
+            ⚬ memory location
+            ⚬ reference count
+            ⚬ copy another block's data
+
+
+
+            free(variableName): return any storage to the freeList (available blocks)
+
+            dump(): 
+                * print each currently allocated variable 
+                    [address][allocSize][associated block's reference count]
+                * print each block in the freeList 
+                    [start location][blockSize]
+                        * reference count of 0
+                
+            compress():
+                * join adjacent blocks in the freeList 
+                    * appropriate location 
+                    * ...sized larger block
+                    * leave unadjacent block alone
+
+            alloc(integerAmount):
+                * use first fit on freeList
+
+            = otherVariable 
+                * take the reference found with the associated with otherVariable
+                and also associate it with variableName
+
+
+            Side note:
+                * freeList must be sorted in ascending address free block 
+                    * DO NOT COMPRESS UNLESS CALLED BY USER
+
+    3/19/24:
+        ⚬ Trying to understand and produce the output
+         
+
 
 
 

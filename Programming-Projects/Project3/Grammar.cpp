@@ -38,6 +38,11 @@ void alloc (string variableName, int amount)
     cout << variableName + " = alloc(" + to_string(amount) + ")\n";
 }
 
+void equal (string lhsID, string rhsID)
+{
+    cout << lhsID + " = " + rhsID << endl;
+}
+
 
 /*
     <prog> -> <slist>
@@ -176,7 +181,7 @@ bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
 {
     bool allocCommand = false;
     int allocAmount = -7;
-
+    string rhsID;
 
     //read token...
     int pos = ifile.tellg();
@@ -184,6 +189,8 @@ bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
 
     if (tok.type() == ID) // -> ID
     {
+        rhsID = tok.value();
+
         if (tok.value() == "alloc")
         {
             allocCommand = true;
@@ -230,7 +237,10 @@ bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
         {
             //UNGET TOKEN
             ifile.seekg(pos);
-            return true; // -> ID
+
+            equal(lhsID, rhsID);// -> ID = ID
+            
+            return true; // -> ID   
         }
     }
     else
