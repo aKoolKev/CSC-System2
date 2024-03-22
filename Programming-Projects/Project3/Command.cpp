@@ -1,4 +1,6 @@
 #include "Command.hpp"
+#include <iterator>
+#include <list>
 
 using namespace std;
 
@@ -22,32 +24,6 @@ Command::sortVarList()
     _varList.sort(sortVarName);
 }
 
-// void 
-// Command::printList()
-// {
-//     int commaCounter = 0;// don't print a comma at the last item in list
-
-//     cout << "\nFree List:\n";
-//     for (Variable v: _varList)
-//     {
-//         v.printVariableInfo();
-//         if (commaCounter < _varList.size()-1)
-//             cout << ", ";
-//     }
-
-//     commaCounter = 0; //reset counter
-//     for (Block b: _freeList)
-//     {
-//         b.printBlockInfo();
-//         if (commaCounter < _freeList.size()-1)
-//             cout << ", ";
-//     }
-
-//     cout << endl;
-// }
-
-
-
 //default constructor
 Command::Command(int initialSize)
 {
@@ -63,14 +39,15 @@ Command::Command(int initialSize)
 
 //function: decrement current variable block pointer reference counter by 1
 void 
-Command::free(string varName)
+Command::free(string varName) 
 {
 
-    cout << "\n[   free(" + varName + "   ])\n";
+    cout << "\n[   free(" + varName + "   )]\n";
 
     list<Variable>::iterator del = _varList.begin();
 
-    for(Variable &var: _varList) //find it first
+    //find it first
+    for(Variable &var: _varList) 
     {
         if (var.getName() == varName)
         {
@@ -84,9 +61,9 @@ Command::free(string varName)
                 _freeList.push_back(newB);
                 sortFreeList();
 
-                _varList.erase(del); //remove it from the varList
             }
 
+            _varList.erase(del); //free the var from the var list
             return; //no need to keep searching
         }
         advance(del, 1);
@@ -94,6 +71,9 @@ Command::free(string varName)
 }
 
 //function: decrement current variable block pointer reference counter by 1
+// and removes the variable from the list
+// called in equal()
+// assumes the variable to free 
 void 
 Command::free(Variable &var)
 {
@@ -108,11 +88,10 @@ Command::free(Variable &var)
         Block newB(var.getBlockPtr()->getBlockSize(), var.getBlockPtr()->getStartIndex());
         _freeList.push_back(newB);
         sortFreeList();
-
-        _varList.erase(del); //remove it from the varList
     }
-    advance(del, 1);
 
+    _varList.erase(del); //remove it from the varList
+    advance(del, 1);
 }
 
 
@@ -156,7 +135,7 @@ Command::alloc (string variableName, int allocAmount)
     for (Variable var: _varList)
     {
         if (var.getName() == variableName) // this variable has already been allocated
-            free(var);
+            free(variableName);
         break; //found, no need to keep searching
     }
 
@@ -230,78 +209,118 @@ void
 Command::equal(string lhsID, string rhsID)
 {
     cout << lhsID + " = " + rhsID << endl;
-    
-    //find the lhs and rhs variable
-    list<Variable>::iterator lhsPtr = _varList.begin();
-    list<Variable>::iterator rhsPtr = _varList.begin();
+    if (lhsID == rhsID)
+        return;
+    // //find the lhs and rhs variable
+    // list<Variable>::iterator lhs_it = _varList.begin();
+    // list<Variable>::iterator rhsPtr = _varList.begin();
 
-    bool lhsFound = false;
-    bool rhsFound = false;
+    // bool lhsFound = false;
+    // bool rhsFound = false;
 
-    cout << "trying to locate the two variable of interests...\n";
+    // cout << "trying to locate the two variable of interests...\n";
 
-    for (Variable var : _varList)
-    {
-        if (var.getName() == lhsID) //found lhs variable
-        {
-            lhsFound = true;
-            cout << "found LHS!\n";
-        }
-        else if (var.getName() == rhsID) // found rhs variable
-        {
-            cout << "found RHS!: ";
-            rhsFound = true;
-            rhsPtr->printVariableInfo();
+    // for (Variable var : _varList)
+    // {
+    //     if (var.getName() == lhsID) //found lhs variable
+    //     {
+    //         lhsFound = true;
+    //         cout << "found LHS!\n";
+    //     }
+    //     else if (var.getName() == rhsID) // found rhs variable
+    //     {
+    //         cout << "found RHS!: ";
+    //         rhsFound = true;
+    //         rhsPtr->printVariableInfo();
             
-        }
+    //     }
 
-        if (!lhsFound)
-            advance(lhsPtr,1);
-        if (!rhsFound)
-            advance(rhsPtr,1);
-    }
+    //     if (!lhsFound)
+    //         advance(lhsPtr,1);
+    //     if (!rhsFound)
+    //         advance(rhsPtr,1);
+    // }
 
 
 
-    //free previous lhs variable allocation
-    if (lhsPtr != _varList.end())
+    // //free previous lhs variable allocation
+    // if (lhsPtr != _varList.end())
+    // {
+    //     free(*lhsPtr); 
+    //     cout << "free previous lhs variable allocation...";
+    // }
+
+
+    // cout << "create new LHS variable allocation...\n";
+
+    // cout << "here0\n";
+    // //create new LHS variable allocation
+    // cout << "rhsPtr: "; rhsPtr->printVariableInfo(); cout << endl;
+    // cout << "here1\n";
+    // Variable v1(lhsID, rhsPtr->getBlockPtr());
+
+    // cout << "here2\n";
+    // //add it it to the var list 
+    // _varList.push_front(v1);
+    // sortVarList();
+
+    // cout << "here3\n";
+    // cout << "done!\n";
+
+
+    std::list<Variable>::iterator lhsVar = _varList.begin();
+    std::list<Variable>::iterator rhsVar= _varList.begin();
+
+    
+
+    bool lhsVarFound = false;
+    bool rhsVarFound = false;
+
+
+    // find the RHS variable
+    for (Variable &var : _varList)
     {
-        free(*lhsPtr); 
-        cout << "free previous lhs variable allocation...";
+        if (var.getName() == rhsID) // found rhs var
+        {
+            cout << "rhsVar1: " << rhsVar->getName() << endl;
+            rhsVarFound = true;
+        }
+        else if (var.getName() == lhsID) //found lhs var
+        {
+            cout << "lhsVar1: " << lhsVar->getName() << endl;
+            lhsVarFound = true;
+        }
+        
+        
+        if(!rhsVarFound)
+            advance(rhsVar, 1);
+        if (!lhsVarFound)
+            advance(lhsVar, 1);
+
+        if (rhsVarFound && lhsVarFound) //found both, no need to keep searching
+            break;
     }
 
+    if (rhsVarFound)
+    {
+        cout << "lhsVar: "; lhsVar->getName();
+        cout << "rhsVar: "; rhsVar->getName();
 
-    cout << "create new LHS variable allocation...\n";
+        
+            //create new lhs var and points it to the rhs block
+            Variable newLHS (lhsID, rhsVar->getBlockPtr());
+            //add lhs var into varlist and re-sort the list
+            _varList.push_front(newLHS);
+            sortVarList();
 
-    cout << "here0\n";
-    //create new LHS variable allocation
-    cout << "rhsPtr: "; rhsPtr->printVariableInfo(); cout << endl;
-    cout << "here1\n";
-    Variable v1(lhsID, rhsPtr->getBlockPtr());
-
-    cout << "here2\n";
-    //add it it to the var list 
-    _varList.push_front(v1);
-    sortVarList();
-
-    cout << "here3\n";
-    cout << "done!\n";
-
-    /* algorithm
+            if (lhsVarFound) //free old LHS value
+                free(lhsID);
     
+    }
+    else
+    {
+        cout << "RHS does not exists. Does not make sense!!!\n";
+    }
 
-        //yes => 
-            free(it)
-            create new var 
-                points to rhs var's block
-                put lhs var into varList
-        //no => 
-            create new var 
-                points to rhs var's block
-                put lhs var into varList
-
-    */
-
-    
-    
+ 
 }

@@ -8,5 +8,5 @@ using namespace std;
 void 
 Variable::printVariableInfo()
 {
-    cout << getName() << ": " << _usedBlock->getStartIndex() << " (" << _usedBlock->getBlockSize() << ") [" << _usedBlock->getRefNum() << "]" << endl;
+    cout << getName() << ":" << _usedBlock->getStartIndex() << "(" << _usedBlock->getBlockSize() << ") [" << _usedBlock->getRefNum() << "]" << endl;
 }

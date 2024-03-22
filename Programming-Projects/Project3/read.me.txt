@@ -139,19 +139,23 @@ DATE: 3/14/24 (Pi Day!)
     3/21/24:
         ⚬ working on free()
         ⚬ working on equal()
-            ⚬ plan
-                ⚬ try to locate both variables in the varList
-                ⚬ [case1]: rhs does NOT exists
-                    ⚬ cannot perform such an option regardless if LHS exists or not!!
-                ⚬ [case2]: RHS  exists
-                    ⚬ LHS does NOT exists  
-                        ⚬ create new var and point it the RHS
-                        ⚬ push it to var list
-                    ⚬ LHS exists
-                        ⚬ free();
-                        ⚬ point it to the RHS
 
-                    ⚬ [case2a]: LHS is the same as the RHS
+        yay seg fault! :D
+
+        ⚬ plan
+            ⚬ try to locate both variables in the varList
+            ⚬ [case1]: rhs does NOT exists
+                ⚬ cannot perform such an option regardless if LHS exists or not!!
+            ⚬ [case2]: RHS  exists
+                ⚬ find RHS
+                ⚬ create a new variable object regardless if LHS exists or not
+                    ⚬ free(old LHS);
+                    ⚬ push new LHS to var list
+                    ⚬ sort var list
+                    ⚬ (should also be able to handle the "lhs = lhs" case)
+
+
+
 
 
                     

@@ -29,9 +29,8 @@ public:
     void equal (std::string lhsID, std::string rhsID);
 
     void sortFreeList();
-    
-    void sortVarList();
-   
+
+    void sortVarList(); 
 };
 
 #endif
