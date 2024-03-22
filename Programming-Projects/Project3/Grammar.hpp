@@ -8,8 +8,10 @@
 #define _GRAMMAR_HPP_
 
 #include "Token.hpp"
+#include "Command.hpp"
 #include <iostream>
 #include <fstream>
+#include <list>
 
 
 void printSourceFile();
@@ -19,13 +21,13 @@ void printSourceFile();
 /*
     <prog> -> <slist>
 */
-bool prog(Token, std::ifstream &);
+bool prog(Token, std::ifstream &, int);
 
 
 /* 
     <slist> -> <stmt> SEMICOLON <slist> | ϵ
 */
-bool slist(Token, std::ifstream &);
+bool slist(Token, std::ifstream &, Command&);
 
 
 /* 
@@ -33,15 +35,13 @@ bool slist(Token, std::ifstream &);
               ID LPAREN RPAREN |
               ID ASSIGNOP <rhs>
 */
-bool stmt(Token, std::ifstream &);
+bool stmt(Token, std::ifstream &, Command&);
 
 /* 
     <rhs> -> ID LPAREN NUM_INT RPAREN |
               ID
 */
-bool rhs(Token, std::ifstream &, std::string);
-
-
+bool rhs(Token, std::ifstream &, std::string, Command&);
 
 
 #endif

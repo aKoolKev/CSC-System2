@@ -91,7 +91,83 @@ DATE: 3/14/24 (Pi Day!)
 
     3/19/24:
         ⚬ Trying to understand and produce the output
-         
+
+    3/20/24:
+        ⚬ Creating a Block class
+            ⚬ Done
+        ⚬ Creating a Variable class
+            ⚬ Done
+        ⚬ Editing makeFile
+            ⚬ Done
+        ⚬ Testing both classes in main 
+
+        ⚬ Can sort freeList by start address
+
+        ⚬ Block class appears to be functioning correctly
+
+        Algorithm: 
+            ⚬ ask for init size
+                ⚬ starting index = 0 
+            ⚬ if id = alloc()
+                ⚬ check if this variable has not been allocated yet in our variable list
+                ⚬ if variable exists
+                    ⚬ => call free();
+                        
+
+                ⚬ first fit in freeList
+                ⚬ if match and left over
+                    ⚬ create left over Free block 
+                        ⚬ size = original size - alloc amount
+                        ⚬ end index  = same as before (if any left)
+                        ⚬ start index = end index - (size - 1)
+
+                        ⚬ add this left over to the freeList
+                ⚬ if match but no left over
+                    ⚬ remove this "free" block from the list since it is an exact fit
+                    ⚬ create variable that points to this block
+                    
+                    ⚬ create usedBlock
+                        ⚬ size = alloc amount 
+                        ⚬ start index = parent start index 
+
+                    ⚬ create variable object that points to that usedBlock 
+
+        ⚬ going to execute code while parsing
+            ⚬ created a Command class 
+
+
+    3/21/24:
+        ⚬ working on free()
+        ⚬ working on equal()
+            ⚬ plan
+                ⚬ try to locate both variables in the varList
+                ⚬ [case1]: rhs does NOT exists
+                    ⚬ cannot perform such an option regardless if LHS exists or not!!
+                ⚬ [case2]: RHS  exists
+                    ⚬ LHS does NOT exists  
+                        ⚬ create new var and point it the RHS
+                        ⚬ push it to var list
+                    ⚬ LHS exists
+                        ⚬ free();
+                        ⚬ point it to the RHS
+
+                    ⚬ [case2a]: LHS is the same as the RHS
+
+
+                    
+
+        
+        
+                    
+
+
+
+
+
+        
+
+        
+
 
 
 

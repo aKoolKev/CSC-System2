@@ -6,6 +6,8 @@
 
 #include "Grammar.hpp"
 #include "Token.hpp"
+#include "Command.hpp"
+
 
 using namespace std;
 
@@ -18,38 +20,14 @@ void printSourceFile()
     cout << SourceFile << endl << "\n\n";
 }
 
-void free(string variableName)
-{
-    cout << "\nfree(" + variableName + ")\n";
-}
-
-void dump()
-{
-    cout << "\ndump()\n";
-}
-
-void compress()
-{
-    cout << "\ncompress()\n";
-}
-
-void alloc (string variableName, int amount)
-{
-    cout << variableName + " = alloc(" + to_string(amount) + ")\n";
-}
-
-void equal (string lhsID, string rhsID)
-{
-    cout << lhsID + " = " + rhsID << endl;
-}
-
-
 /*
     <prog> -> <slist>
 */
-bool prog(Token tok, std::ifstream &ifile)
+bool prog(Token tok, std::ifstream &ifile, int initSize)
 {
-    if( slist(tok, ifile) )
+    Command cmd (initSize);
+
+    if( slist(tok, ifile, cmd) )
         return true;
     else
         return false;
@@ -58,9 +36,9 @@ bool prog(Token tok, std::ifstream &ifile)
 /* 
     <slist> -> <stmt> SEMICOLON <slist> | ϵ
 */
-bool slist(Token tok, std::ifstream &ifile)
+bool slist(Token tok, std::ifstream &ifile, Command &cmd)
 {
-    if (stmt(tok, ifile))
+    if (stmt(tok, ifile, cmd))
     {
         //get token...
         tok.get(ifile);
@@ -69,7 +47,7 @@ bool slist(Token tok, std::ifstream &ifile)
         {
             SourceFile += tok.value() + " ";
 
-            if (slist(tok, ifile)) // -> <stmt> SEMICOLON <slist>
+            if (slist(tok, ifile, cmd)) // -> <stmt> SEMICOLON <slist>
                 return true;
             else
                 return false;
@@ -87,7 +65,7 @@ bool slist(Token tok, std::ifstream &ifile)
               ID LPAREN RPAREN |
               ID ASSIGNOP <rhs>
 */
-bool stmt(Token tok, std::ifstream &ifile)
+bool stmt(Token tok, std::ifstream &ifile, Command &cmd)
 {
     bool freeCommand = false;
     bool dumpCommand = false;
@@ -135,7 +113,7 @@ bool stmt(Token tok, std::ifstream &ifile)
                     SourceFile += tok.value() + " ";
 
                     if (freeCommand) // -> free(ID)
-                        free(variableName);
+                        cmd.free(variableName);
 
                     return true;
                 }
@@ -145,9 +123,9 @@ bool stmt(Token tok, std::ifstream &ifile)
             else if (tok.type() == RPAREN) // -> ID LPAREN RPAREN
             {    
                 if (dumpCommand) // -> dump()
-                    dump();
+                    cmd.dump();
                 else if (compressCommand) // -> compress()
-                    compress();
+                    cmd.compress();
 
                 SourceFile += tok.value() + " ";
                 return true;
@@ -159,7 +137,7 @@ bool stmt(Token tok, std::ifstream &ifile)
         {
             SourceFile += tok.value() + " ";
 
-            if (rhs(tok, ifile, ID_Val)) // -> ID ASSIGNOP rhs
+            if (rhs(tok, ifile, ID_Val, cmd)) // -> ID ASSIGNOP rhs
             {
                 return true;
             }
@@ -177,7 +155,7 @@ bool stmt(Token tok, std::ifstream &ifile)
     <rhs> -> ID LPAREN NUM_INT RPAREN |
              ID
 */
-bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
+bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */, Command &cmd)
 {
     bool allocCommand = false;
     int allocAmount = -7;
@@ -222,7 +200,7 @@ bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
                 if(tok.type() == RPAREN) // -> ID LPAREN NUM_INT RPAREN
                 {
                     if (allocCommand)
-                        alloc(lhsID, allocAmount);
+                        cmd.alloc(lhsID, allocAmount);
 
                     SourceFile += tok.value() + " ";
                     return true; 
@@ -238,7 +216,7 @@ bool rhs(Token tok, std::ifstream &ifile, string lhsID /* ID = ... */)
             //UNGET TOKEN
             ifile.seekg(pos);
 
-            equal(lhsID, rhsID);// -> ID = ID
+            cmd.equal(lhsID, rhsID);// -> ID = ID
             
             return true; // -> ID   
         }

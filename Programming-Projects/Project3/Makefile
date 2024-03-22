@@ -5,20 +5,29 @@ OPTS=$(DBG) $(OPTIM) -Wall -ansi -pedantic
 CC=g++ $(OPTS)  -c
 LNK=g++
 
-OBJS=Token.o main.o Grammar.o
-GLBL=Makefile Token.hpp Grammar.hpp
+OBJS=main.o Token.o Grammar.o Block.o Variable.o Command.o
+GLBL=Makefile Token.hpp Grammar.hpp Variable.hpp Block.hpp Command.hpp
 
 run: $(OBJS)
 	$(LNK) -o run $(OBJS)
 
-main.o: main.cpp Token.hpp $(GLBL)
+main.o: main.cpp $(GLBL)
 	$(CC) main.cpp
 
 Token.o: Token.cpp Token.hpp $(GLBL)
 	$(CC) Token.cpp
 
-Grammar.o: Grammar.cpp Grammar.hpp Token.hpp
+Grammar.o: Grammar.cpp Grammar.hpp $(GLBL)
 	$(CC) Grammar.cpp
+
+Block.o: Block.cpp Block.hpp $(GLBL)
+	$(CC) Block.cpp
+
+Variable.o: Variable.hpp Variable.cpp $(GLBL)
+	$(CC) Variable.cpp
+
+Command.o: Command.hpp Command.cpp $(GLBL)
+	$(CC) Command.cpp
 
 clean:
 	/bin/rm -f *.o run *~

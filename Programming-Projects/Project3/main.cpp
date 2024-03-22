@@ -37,41 +37,148 @@
 #include "Grammar.hpp"
 #include "Token.hpp"
 
+#include "Block.hpp"
+#include "Variable.hpp"
+
+#include <list> // STL list
+
 using namespace std;
+
+
+
+
+void addToList(list<Block> &freeList, Block insertBlock)
+{
+  if(insertBlock.getRefNum() == 0) // no references to this block thus a free block 
+    freeList.push_back(insertBlock);
+  else
+    cout << "ERROR: Failed to add to freeList. Block reference count: " << insertBlock.getRefNum() << endl;
+}
+
+void printList(list<Block> &freeList)
+{
+  cout << "Free List:\n";
+
+  int commaCounter = 0;// don't print a comma at the last item in list
+
+  for (Block b: freeList)
+  {
+    b.printBlockInfo();
+    if (commaCounter < freeList.size()-1)
+      cout << ", ";
+  }
+}
+
+
 
 int main(int argc, char *argv[])
 {
-  // make sure input file was specified
-  if (argc!=2)
-  {
-    cerr << "USAGE: " << argv[0] << " <file>" << endl;
-    return -1;
-  }
 
-  // open input file
-  ifstream ifile(argv[1]);
+  //cout << "Please enter the initial freelist (heap) size: ";
+  int initSize=512;
+  // cin >> initSize;
 
-  // if open was not successful, let user know. 
-  if (!ifile)
-  {
-    cerr << "ERROR: Could not open file:\"" << argv[1] << "\"" <<endl;
-    return -1;
-  }
+  //cout << "Please enter the name of an input file: ";
+  string fileName = "test.myl";
+  // cin >> fileName;
+ 
+  //assumes you entered in a valid input file...
+  ifstream ifile(fileName);
+
+  // //a list containing free blocks (blocks with zero reference count)
+  // list<Block> freeList;
+  
+  // //create the inital free block of specified size
+  // Block initialBlock (initSize, 0);
+
+  // addToList(freeList, initialBlock);
+
+  // //debug
+  // printList(freeList);
 
   // create an initial Token object
   Token tok;
 
   // start parsing and stores the result (sucessful or failed)
-  bool successful = prog(tok, ifile);
+  bool successful = prog(tok, ifile, initSize);
 
   // parsing was successful...print out the "beautified" code
   if (successful)
   {
     cout << "\n# successful code =========================\n";
-    printSourceFile();
+    //printSourceFile();
   }
   else // parsing failed...just indicate such
     cout << "\n# UNsuccessful code =========================\n";
+
+
+
+  // cout << "Created b1\n";
+  // Block b1(478, 34+478-1);
+  // b1.printBlockInfo();
+  // cout << "\n\n";
+
+  // //testing Variable class
+  // cout << "Created v0\n";
+  // Variable v0("a", 34, 0, b1);
+  // v0.printVariableInfo(); 
+  // cout << endl;
+  // b1.printBlockInfo();
+
+  // cout << "Created v1\n";
+  // Variable v1("b", 7, 90, b1);
+  // v1.printVariableInfo(); 
+  // cout << endl;
+  // b1.printBlockInfo();
+
+
+  // cout << "Created v2\n";
+  // Variable v2("c", 7, 90, b1);
+  // v2.printVariableInfo(); 
+  // cout << endl;
+  // b1.printBlockInfo();
+  // cout << "\n\n\n";
+
+ 
+
+  
+
+  //debug
+  // Block b2(17,17+17-1);
+  // Block b3(14,20+14-1);
+
+  
+  //list<Block> freeList; // a list containing free blocks (blocks with zero reference count)
+
+  //debug
+  // freeList.push_back(b1);
+  // freeList.push_back(b2);
+  // freeList.push_back(b3);
+
+
+  // cout << "Not sorted:\n";
+  // for (Block b: freeList)
+  // {
+  //   b.printBlockInfo();
+  //   cout << ", ";
+  // }
+  // cout << '\n';
+
+  // cout << "\n\nSorted:\n";
+
+  // freeList.sort(sortStartIndex);
+  // for (Block b: freeList)
+  // {
+  //   b.printBlockInfo();
+  //   cout << ", ";
+  // }
+  // cout << '\n';
+
+  
+
+  
+
+  
 
   return 0;
 }
