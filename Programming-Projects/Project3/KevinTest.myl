@@ -1,0 +1,1 @@
+compress(); dump(); a = alloc(1); compress(); dump();

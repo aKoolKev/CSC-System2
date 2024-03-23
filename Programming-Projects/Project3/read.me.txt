@@ -154,6 +154,33 @@ DATE: 3/14/24 (Pi Day!)
                     ⚬ sort var list
                     ⚬ (should also be able to handle the "lhs = lhs" case)
 
+    3/22/24:
+        ⚬ equal() works!
+        ⚬ coding compress()
+            plan:   
+                ⚬ Loop through the freeList
+                ⚬ Since sorted in ascending order, we traverse through each node (freeBlock) in the list
+                ⚬ Compress two blocks if
+                    startIndexBlock1 + Block1Size = startIndexBlock2
+                        if true: adjacent!
+
+                            Block1Size = Block1Size + Block2Size
+                            startIndexBlock1 remains the same, but endIndex will change
+
+                            remove the Block2 (since it has been compressed)
+                            * could delete the memory leak here 
+
+            2 pointer APPROACH
+            keep a curr pointer 
+                only incerement if not adjaceent and currCounter < (size-1)
+                increment currCounter
+
+
+
+
+                
+
+
 
 
 

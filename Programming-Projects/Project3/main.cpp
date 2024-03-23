@@ -73,18 +73,27 @@ void printList(list<Block> &freeList)
 
 int main(int argc, char *argv[])
 {
+  //prompt for initial size of the heap
+  cout << "Please enter the initial freelist (heap) size: ";
+  int initSize=0;
+  cin >> initSize;
 
-  //cout << "Please enter the initial freelist (heap) size: ";
-  int initSize=512;
-  // cin >> initSize;
+  //invalid initial size
+  if (initSize <= 0)
+    cerr << "Enter an actual size!";
 
-  //cout << "Please enter the name of an input file: ";
-  string fileName = "test.myl";
-  // cin >> fileName;
- 
-  //assumes you entered in a valid input file...
+
+  //prompt for input file
+  cout << "Please enter the name of an input file: ";
+  string fileName;
+  cin >> fileName;
+
   ifstream ifile(fileName);
 
+  //invalid input files
+  if (!ifile)
+    cerr << "Enter a valid input file name!";
+ 
   // //a list containing free blocks (blocks with zero reference count)
   // list<Block> freeList;
   

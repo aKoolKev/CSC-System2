@@ -1,0 +1,24 @@
+# This test case is meant to be run with a heap size of 512
+a=alloc(511);
+    #a:0[511]
+    #FL:[]
+b=alloc(1);
+c=a;
+d=b;
+dump();
+free(a); dump();
+free(b); dump();
+free(c); dump();
+e=alloc(256); dump();
+f=alloc(128); dump();
+g=alloc(64); dump();
+free(d); dump();
+free(f); dump();
+compress(); dump();
+free(e); dump();
+free(g); dump();
+compress(); dump();
+# Test One block of max size
+z = alloc(512); dump();
+free(z); dump();
+

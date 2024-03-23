@@ -1,6 +1,6 @@
 #OPTIM=-O
 DBG=-g
-OPTS=$(DBG) $(OPTIM) -Wall -ansi -pedantic
+OPTS=$(DBG) $(OPTIM) -Wall -ansi -pedantic -std=c++20
 
 CC=g++ $(OPTS)  -c
 LNK=g++

@@ -39,28 +39,28 @@ Command::Command(int initialSize)
 
 //function: decrement current variable block pointer reference counter by 1
 void 
-Command::free(string varName) 
+Command::free(string varToFind) 
 {
 
-    cout << "\n[   free(" + varName + "   )]\n";
+    cout << "\n[   free(" + varToFind + "   )]\n";
 
     list<Variable>::iterator del = _varList.begin();
 
     //find it first
     for(Variable &var: _varList) 
     {
-        if (var.getName() == varName)
+        if (var.getName() == varToFind) //found
         {
             //decrement the variable's allocated block by 1
             var.getBlockPtr()->getRefNum()--;
 
             //must check the block ref counter 
-            if ( var.getBlockPtr()->getRefNum() == 0) // block is a free block now
+            // var.getBlockPtr()->isFreeBlock();
+            if (var.getBlockPtr()->isFreeBlock()) // block is a free block now
             {
                 Block newB(var.getBlockPtr()->getBlockSize(), var.getBlockPtr()->getStartIndex());
                 _freeList.push_back(newB);
                 sortFreeList();
-
             }
 
             _varList.erase(del); //free the var from the var list
@@ -68,30 +68,8 @@ Command::free(string varName)
         }
         advance(del, 1);
     }
-}
 
-//function: decrement current variable block pointer reference counter by 1
-// and removes the variable from the list
-// called in equal()
-// assumes the variable to free 
-void 
-Command::free(Variable &var)
-{
-    list<Variable>::iterator del = _varList.begin();
-    
-    //decrement the variable's allocated block by 1
-    var.getBlockPtr()->getRefNum()--;
-
-    //must check the block ref counter 
-    if ( var.getBlockPtr()->getRefNum() == 0) // block is a free block now
-    {
-        Block newB(var.getBlockPtr()->getBlockSize(), var.getBlockPtr()->getStartIndex());
-        _freeList.push_back(newB);
-        sortFreeList();
-    }
-
-    _varList.erase(del); //remove it from the varList
-    advance(del, 1);
+    cout << "Error: " + varToFind + " was not found!\n";
 }
 
 
@@ -113,7 +91,6 @@ Command::dump()
             cout << ", ";
             commaCounter++;
         }
-
     }
 
     cout << "\n===============================================================\n"; 
@@ -123,6 +100,157 @@ void
 Command::compress()
 {
     cout << "\n[   compress()   ]\n";
+
+    /*
+     ⚬ Loop through the freeList
+                ⚬ Since sorted in ascending order, we traverse through each node (freeBlock) in the list
+                ⚬ Compress two blocks if
+                    startIndexBlock1 + Block1Size = startIndexBlock2
+                        if true: adjacent!
+
+                            Block1Size = Block1Size + Block2Size
+                            startIndexBlock1 remains the same, but endIndex will change
+
+                            remove the Block2 (since it has been compressed)
+                            * could delete the memory leak here 
+    */
+
+    //base case: nothing to compress
+    if(_freeList.size() <= 1)
+        return; 
+    //guarenteed there are at least 2 blocks in the free list to compress
+
+
+    list<Block>::iterator currBlock = _freeList.begin();
+    list<Block>::iterator nextBlock = _freeList.begin();  advance(nextBlock,1);
+    
+    
+    //advance(nextBlock,1); // what it means to be the next block
+
+    // int currCounter = 0;
+    bool flag = false;
+
+    // //loop through the list
+    // while (currBlock != _freeList.end())
+    // {
+            
+    //    //prevent looking beyond our list when we are at the last element
+    //         if (currBlock!=_freeList.end())
+    //         {
+    //             advance (nextBlock,1);
+    //             if (nextBlock == _freeList.end())
+    //             {
+    //                 cout << "\nflag\n";
+    //                 flag = true;
+    //             }
+    //             cout << "\n\ncurrBlock: "; currBlock->printBlockInfo(); 
+    //             cout << "\nNextBlock: "; nextBlock->printBlockInfo(); cout << "\n\n";
+    //         }
+    //         else 
+    //         {
+    //             cout << "\nat the end\n";
+    //             break;
+    //         }
+
+        
+    //         //blocks are ADJACENT!!
+    //         if (currBlock->getStartIndex() + currBlock->getBlockSize() ==  nextBlock->getStartIndex()  ) 
+    //         {
+    //             cout << "adjacent blocks: "; currBlock->printBlockInfo(); cout << ", "; nextBlock->printBlockInfo(); cout << endl; 
+    //             //adjacent! Thus can compress
+    //             //Block1Size = Block1Size + Block2Size
+    //             currBlock->getBlockSize() += nextBlock->getBlockSize();
+    //             //recalculate Block1 endIndex
+    //             currBlock->getEndIndex() = (currBlock->getStartIndex() + currBlock->getBlockSize() - 1);
+
+
+    //             cout << "after compressing..."; currBlock->printBlockInfo(); cout << endl;
+                
+    //             //remove the 2nd block since it was "combined"
+    //             list<Block>::iterator del = next(currBlock,1);
+    //             _freeList.erase(del);  
+
+    //         }
+    //         else //blocks are NOT adjacent, move to next element
+    //         {
+    //             cout << "NOT adjacent: "; currBlock->printBlockInfo(); cout << ", "; nextBlock->printBlockInfo(); cout << endl; 
+    //             cout << "Advancing currBlock \n";
+    //             advance(currBlock,1);
+    //         }
+
+    //         if (flag)
+    //         {    
+    //             cout << "\nactivaited\n";
+    //             return;
+    //         }
+
+
+            
+    //         cout << "end: \n";
+
+    //         cout << "currBlock: "; currBlock->printBlockInfo(); 
+    //         cout << "\nNextBlock: "; nextBlock->printBlockInfo(); cout << "\n\n";
+                
+            
+    // }
+    while(currBlock != prev(_freeList.end(),1) && nextBlock!= _freeList.end())
+    {
+
+        if (nextBlock == prev(_freeList.end(),1))
+        {    cout << "\nflag set\n";
+            flag = true;
+        }
+
+        cout << "currBlock: "; currBlock->printBlockInfo(); cout << ", nextBlock: "; nextBlock->printBlockInfo(); cout << endl; 
+        cout << "end:"; prev(_freeList.end())->printBlockInfo(); cout << endl;
+
+        if (currBlock->getStartIndex() + currBlock->getBlockSize() ==  nextBlock->getStartIndex()  ) 
+        {
+            cout << "adjacent blocks: "; currBlock->printBlockInfo(); cout << ", "; nextBlock->printBlockInfo(); cout << endl; 
+            //adjacent! Thus can compress
+            //Block1Size = Block1Size + Block2Size
+            currBlock->getBlockSize() += nextBlock->getBlockSize();
+            //recalculate Block1 endIndex
+            currBlock->getEndIndex() = (currBlock->getStartIndex() + currBlock->getBlockSize() - 1);
+
+
+            cout << "after compressing..."; currBlock->printBlockInfo(); cout << endl;
+            
+            //remove the 2nd block since it was "combined"
+        
+            cout << "here1\n";
+            list<Block>::iterator del = next(currBlock,1);
+            advance(nextBlock,1);
+            cout << "here2\n";
+            _freeList.erase(del);
+
+            cout << "here3\n";  
+            //advance(nextBlock,1);
+            cout << "here4\n";
+
+        }
+        else //blocks are NOT adjacent, move to next element
+        {
+            cout << "NOT adjacent: "; currBlock->printBlockInfo(); cout << ", "; nextBlock->printBlockInfo(); cout << endl; 
+            cout << "Advancing currBlock \n";
+            advance(currBlock,1);
+            advance(nextBlock,1);
+        }
+        cout << "here5\n";
+
+        if(flag)
+        {
+            cout << "flag triggered";
+            break;
+        }
+
+            cout << "here6\n";
+
+    }
+    cout << "here7\n";
+    cout << "\ndone with compress()\n";
+    cout << "here8\n";
+
 }
 
 void 
@@ -131,42 +259,50 @@ Command::alloc (string variableName, int allocAmount)
     cout << "\n[   " + variableName + " = alloc(" + to_string(allocAmount) + ")   ]";
 
 
-    //check if this block have not been allocated ready
+    bool newVar = true;
     for (Variable var: _varList)
     {
         if (var.getName() == variableName) // this variable has already been allocated
+        {
+            newVar = false;
             free(variableName);
-        break; //found, no need to keep searching
+            break; //found, no need to keep searching
+        }
     }
 
-    cout << "\nvar: " << variableName << " not allocated \n";
+    // if (newVar)
+
+    // cout << "\nvar: " << variableName << " not allocated \n";
 
 
     list<Block>::iterator del = _freeList.begin();
     
-    cout << "\nattempting first fit...\n";
+    cout << "\nattempting first fit...\n"; //debug
 
     for (Block &b: _freeList) //first fit
     {
-        cout << "curr b:"; b.printBlockInfo(); cout << endl;
+      
+        cout << "curr b:"; b.printBlockInfo(); cout << endl; //debug
+
+        //found a candidate
         if (b.getBlockSize() >= allocAmount)
         {
-            cout << "firstFit found: ";
-            b.printBlockInfo(); cout << endl;
+            cout << "firstFit found: "; //debug
+            b.printBlockInfo(); cout << endl; //debug
 
             int leftOverSize = b.getBlockSize() - allocAmount;
 
-            //figure out if there is any leftovers
+            //handle alloc to the amount of left over space accordingly
             if (leftOverSize > 0) // left over free space
             {
-                cout << "\nthere's leftover\n";
+                cout << "\nthere's leftover\n"; //debug
 
                 // Block b2(allocAmount, b.getStartIndex());
                 // cout << "b2: "; b2.printBlockInfo();
+                
                 Block* ptr = new Block(allocAmount, b.getStartIndex());
-                Variable v1(variableName, ptr);
-                //cout << "v1: "; v1.printVariableInfo();
-                _varList.push_front(v1);
+                Variable var(variableName, ptr);
+                _varList.push_front(var);
                 sortVarList();
 
             
@@ -185,9 +321,10 @@ Command::alloc (string variableName, int allocAmount)
             } 
             else if (leftOverSize == 0) //exact fit
             {
-                Block* ptr = &b;
-                Variable v1(variableName, ptr);
-                _varList.push_front(v1);
+                cout << "\nexact fit!\n";
+                Block* ptr = new Block(allocAmount, b.getStartIndex());
+                Variable var(variableName, ptr);
+                _varList.push_front(var);
                 sortVarList();
 
                 _freeList.erase(del);
@@ -209,118 +346,103 @@ void
 Command::equal(string lhsID, string rhsID)
 {
     cout << lhsID + " = " + rhsID << endl;
+
+    // base case: LHS = RHS (essentially do "nothing")
     if (lhsID == rhsID)
         return;
-    // //find the lhs and rhs variable
-    // list<Variable>::iterator lhs_it = _varList.begin();
-    // list<Variable>::iterator rhsPtr = _varList.begin();
 
-    // bool lhsFound = false;
-    // bool rhsFound = false;
+    /* New Algorithm 
+        - try to locate LHS and RHS  (done)
+        - If LHS does not exists (done)
+            - create new LHS var (done)
+            - point LHS var to RHS (done)
+            - put LHS var into list (done)
 
-    // cout << "trying to locate the two variable of interests...\n";
-
-    // for (Variable var : _varList)
-    // {
-    //     if (var.getName() == lhsID) //found lhs variable
-    //     {
-    //         lhsFound = true;
-    //         cout << "found LHS!\n";
-    //     }
-    //     else if (var.getName() == rhsID) // found rhs variable
-    //     {
-    //         cout << "found RHS!: ";
-    //         rhsFound = true;
-    //         rhsPtr->printVariableInfo();
-            
-    //     }
-
-    //     if (!lhsFound)
-    //         advance(lhsPtr,1);
-    //     if (!rhsFound)
-    //         advance(rhsPtr,1);
-    // }
-
-
-
-    // //free previous lhs variable allocation
-    // if (lhsPtr != _varList.end())
-    // {
-    //     free(*lhsPtr); 
-    //     cout << "free previous lhs variable allocation...";
-    // }
-
-
-    // cout << "create new LHS variable allocation...\n";
-
-    // cout << "here0\n";
-    // //create new LHS variable allocation
-    // cout << "rhsPtr: "; rhsPtr->printVariableInfo(); cout << endl;
-    // cout << "here1\n";
-    // Variable v1(lhsID, rhsPtr->getBlockPtr());
-
-    // cout << "here2\n";
-    // //add it it to the var list 
-    // _varList.push_front(v1);
-    // sortVarList();
-
-    // cout << "here3\n";
-    // cout << "done!\n";
-
+        - If LHS exists (LHS != RHS) 
+            - free(LHS)
+            - points LHS to RHS 
+            - put LHS into list
+        - If LHS exists (LHS = RHS) (done)
+            - do nothing (done)
+    */
 
     std::list<Variable>::iterator lhsVar = _varList.begin();
     std::list<Variable>::iterator rhsVar= _varList.begin();
 
-    
-
     bool lhsVarFound = false;
     bool rhsVarFound = false;
 
-
-    // find the RHS variable
+    // try to find LHS and RHS 
     for (Variable &var : _varList)
     {
-        if (var.getName() == rhsID) // found rhs var
+        string varName = var.getName();
+
+        if (varName == lhsID) //found lhs var
         {
-            cout << "rhsVar1: " << rhsVar->getName() << endl;
-            rhsVarFound = true;
-        }
-        else if (var.getName() == lhsID) //found lhs var
-        {
-            cout << "lhsVar1: " << lhsVar->getName() << endl;
+            cout << "found lhsVar1: " << lhsVar->getName() << endl;
             lhsVarFound = true;
         }
+        else if (varName == rhsID) // found rhs var
+        {
+            cout << "found rhsVar1: " << rhsVar->getName() << endl;
+            rhsVarFound = true;
+        }
         
-        
-        if(!rhsVarFound)
-            advance(rhsVar, 1);
+    
         if (!lhsVarFound)
             advance(lhsVar, 1);
+        if (!rhsVarFound)
+            advance(rhsVar, 1);
 
         if (rhsVarFound && lhsVarFound) //found both, no need to keep searching
             break;
     }
 
+    // RHS exists
     if (rhsVarFound)
     {
+        //debugging
         cout << "lhsVar: "; lhsVar->getName();
         cout << "rhsVar: "; rhsVar->getName();
 
-        
-            //create new lhs var and points it to the rhs block
-            Variable newLHS (lhsID, rhsVar->getBlockPtr());
-            //add lhs var into varlist and re-sort the list
-            _varList.push_front(newLHS);
+        if (lhsVarFound) //LHS var exists
+        {
+            cout << "\nLHS var exists\n";
+            free(lhsID); 
+            lhsVar->getBlockPtr() = rhsVar->getBlockPtr();
+            _varList.push_front(*lhsVar);
             sortVarList();
+            // - free(LHS)
+            // - points LHS to RHS 
+            // - put LHS into list
+        }
+        else // LHS var does not exists
+        {
+            cout << "\nLHS var does not exists\n";
+            //create a new LHS var
+            cout << "create new LHS var\n";
 
-            if (lhsVarFound) //free old LHS value
-                free(lhsID);
+            Variable newLHSVar(lhsID, rhsVar->getBlockPtr());
+            //put new var into varList
+            _varList.push_front(newLHSVar);
+            sortVarList();
+        }
+
+
+        // //create new lhs var and points it to the rhs block
+        // Variable newLHS (lhsID, rhsVar->getBlockPtr());
+        // //add lhs var into varlist and re-sort the list
+        // _varList.push_front(newLHS);
+        // sortVarList();
+
+        // if (lhsVarFound) //free old LHS value
+        //     free(lhsID);
     
     }
-    else
+    else // error handling case where RHS variable does not exists
     {
         cout << "RHS does not exists. Does not make sense!!!\n";
     }
 
- 
+   
 }
