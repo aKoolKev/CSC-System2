@@ -258,13 +258,10 @@ Command::alloc (string variableName, int allocAmount)
 {
     cout << "\n[   " + variableName + " = alloc(" + to_string(allocAmount) + ")   ]";
 
-
-    bool newVar = true;
     for (Variable var: _varList)
     {
         if (var.getName() == variableName) // this variable has already been allocated
         {
-            newVar = false;
             free(variableName);
             break; //found, no need to keep searching
         }
@@ -281,7 +278,6 @@ Command::alloc (string variableName, int allocAmount)
 
     for (Block &b: _freeList) //first fit
     {
-      
         cout << "curr b:"; b.printBlockInfo(); cout << endl; //debug
 
         //found a candidate

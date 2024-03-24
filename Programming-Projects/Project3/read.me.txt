@@ -1,52 +1,80 @@
 AUTHOR: Kevin Dong
-DATE: 3/14/24 (Pi Day!)
-
+DATE: 3/14/24 (Happy Pi Day!)
 
 |PLATFORM|: 
     ⚬ macOS, VS CODE
-
 
 |COMPILE DIRECTIONS|:
     ⚬ Use the provided makeFile to compile program
         ⚬ Executable name: run
 
 |RUN PROGRAM DIRECTIONS|:
+    ⚬ Insert a valid initial size of the heap
+    ⚬ Provide a valid input file
 
 |BUGS|:
 
 
 |SOLUTION APPROACH|:
+    ⚬ Created a Block class that represents the space in the heap.
+    ⚬ Created a Variable class that represents the allocation of an ID.
+    ⚬ Used STL list data structure to hold the Variable objects and Block objects respectively.
+    ⚬ Created a Command class that executes the command respectively the moment the parser gets a valid grammar match.
+        ⚬ dump(): //easiest to code
+            1. Iterate though each list, printing out the values of interests.
+
+        ⚬ free(): //will be used in alloc()
+            1. Find the Variable to free.
+            2. Decrement the reference counter to the Block it was pointing to.
+            3. Remove the Variable from the variable list.
+
+        ⚬ alloc(): 
+            1. Try to free previous allocation.
+            2. Find free Block in freeList using "first fit" scheme.
+            3. Create Variable object that points to that Block, which will now be used.
+            4. Calculate the difference after the allocation.
+
+        ⚬ equal():
+            1. Locate both variable of interests.
+            2. Make sure the RHS exists (or else it does not make sense to do so)
+            3. If LHS already exists, then free it.
+            4. If LHS does not exists, then make a new Variable.
+            5. Only point LHS to the RHS block iff RHS exists.
+                5. Special case of LHS = LHS. Point to yourself, thus essentially do nothing. 
+
+        ⚬ compress():
+            1. Two pointer approach: one at current block and another at the next
+            2. Two blocks are adjacent if current block start index + current block size = next block start index
+            3. If adjacent, edit current block with new size, delete the combined block from free list, and advance next pointe
+            4. If not adjacent, move current pointer
+            5. Stop when either current position is at the end of the list or the next block is the end
+
+
+        ⚬ Lots of drawing diagrams!!!
+
+
 
 
 |LOG|:
 
     3/14/24:
-        ⚬ Understand problem statement
+        ⚬ Understand problem statement.
         ⚬ Import over the Lexical Analyzer (from project1) and recursive descent parser (from project2).
-        ⚬ Support the new BNF grammar in the grammar class 
+        ⚬ Support the new BNF grammar in the Grammar class.
             ⚬ Make change to recursive descent parser code  
-            ⚬ Pseudocode: 
-                1. Prompt for block size
-                2. Prompt for input file name
-                3. Create an ifstream object
-                4. Pass it into Grammar class
-                    4a. Keep reading from file until end of file
-                    4b. Try to match the grammar
-                    4c. If it matches a grammar, run the associated method
-                            Q: Should I include the command in the grammar class or make it it's own class?
+        ⚬ If it matches a grammar, run the associated method
+            ⚬ Q: Should I include the command in the grammar class or make it it's own class?
 
 
         ⚬ Write the grammar definition
             ⚬ Done!
-            ⚬ Test the Lexical Analyzer...
-                ⚬ Works! :D
-            ⚬ Test Recursive descent works...
-                ⚬ Works! :D
+        ⚬ Test the Lexical Analyzer...
+            ⚬ Works! :D
+        ⚬ Test Recursive descent works...
+            ⚬ Works! :D
 
-
-        
         ⚬ Can detect when to call free(variableName)
-            ⚬ Not what to code for it
+
 
     3/16/24: 
         ⚬ Be able to detect alloc()
@@ -54,33 +82,31 @@ DATE: 3/14/24 (Pi Day!)
         ⚬ Be able to detect ID = ID
             ⚬ It works!
 
-        ⚬ Each block
+        ⚬ Each Block object
             ⚬ size
             ⚬ memory location
-            ⚬ reference count
-            ⚬ copy another block's data
+            ⚬ reference counter
 
+        ⚬ Each commands functions: 
+            ⚬ free(variableName): return any storage to the freeList (available blocks)
 
-
-            free(variableName): return any storage to the freeList (available blocks)
-
-            dump(): 
+            ⚬ dump(): 
                 * print each currently allocated variable 
                     [address][allocSize][associated block's reference count]
                 * print each block in the freeList 
                     [start location][blockSize]
                         * reference count of 0
                 
-            compress():
+            ⚬ compress():
                 * join adjacent blocks in the freeList 
                     * appropriate location 
                     * ...sized larger block
                     * leave unadjacent block alone
 
-            alloc(integerAmount):
+            ⚬ alloc(integerAmount):
                 * use first fit on freeList
 
-            = otherVariable 
+            ⚬ = otherVariable 
                 * take the reference found with the associated with otherVariable
                 and also associate it with variableName
 
@@ -90,20 +116,19 @@ DATE: 3/14/24 (Pi Day!)
                     * DO NOT COMPRESS UNLESS CALLED BY USER
 
     3/19/24:
-        ⚬ Trying to understand and produce the output
+        ⚬ Hand tracing test case and trying to produce the expected output.
 
     3/20/24:
+        ⚬ Begin coding idea
         ⚬ Creating a Block class
             ⚬ Done
         ⚬ Creating a Variable class
             ⚬ Done
-        ⚬ Editing makeFile
+        ⚬ Editing Makefile
             ⚬ Done
         ⚬ Testing both classes in main 
-
-        ⚬ Can sort freeList by start address
-
         ⚬ Block class appears to be functioning correctly
+        ⚬ Can sort freeList by start address
 
         Algorithm: 
             ⚬ ask for init size
@@ -113,15 +138,14 @@ DATE: 3/14/24 (Pi Day!)
                 ⚬ if variable exists
                     ⚬ => call free();
                         
-
                 ⚬ first fit in freeList
                 ⚬ if match and left over
                     ⚬ create left over Free block 
                         ⚬ size = original size - alloc amount
                         ⚬ end index  = same as before (if any left)
                         ⚬ start index = end index - (size - 1)
-
                         ⚬ add this left over to the freeList
+
                 ⚬ if match but no left over
                     ⚬ remove this "free" block from the list since it is an exact fit
                     ⚬ create variable that points to this block
@@ -133,20 +157,22 @@ DATE: 3/14/24 (Pi Day!)
                     ⚬ create variable object that points to that usedBlock 
 
         ⚬ going to execute code while parsing
-            ⚬ created a Command class 
+            ⚬ created a Command class to handle it
 
 
     3/21/24:
         ⚬ working on free()
+            ⚬ done!
         ⚬ working on equal()
+            ⚬ done!
 
         yay seg fault! :D
 
-        ⚬ plan
+        ⚬ Recode equals()
             ⚬ try to locate both variables in the varList
             ⚬ [case1]: rhs does NOT exists
                 ⚬ cannot perform such an option regardless if LHS exists or not!!
-            ⚬ [case2]: RHS  exists
+            ⚬ [case2]: RHS exists
                 ⚬ find RHS
                 ⚬ create a new variable object regardless if LHS exists or not
                     ⚬ free(old LHS);
@@ -156,10 +182,10 @@ DATE: 3/14/24 (Pi Day!)
 
     3/22/24:
         ⚬ equal() works!
+
         ⚬ coding compress()
             plan:   
                 ⚬ Loop through the freeList
-                ⚬ Since sorted in ascending order, we traverse through each node (freeBlock) in the list
                 ⚬ Compress two blocks if
                     startIndexBlock1 + Block1Size = startIndexBlock2
                         if true: adjacent!
@@ -170,36 +196,20 @@ DATE: 3/14/24 (Pi Day!)
                             remove the Block2 (since it has been compressed)
                             * could delete the memory leak here 
 
-            2 pointer APPROACH
-            keep a curr pointer 
-                only incerement if not adjaceent and currCounter < (size-1)
-                increment currCounter
+            ⚬ 2 pointer APPROACH: keep a curr pointer and a next pointer
 
 
+    3/23/24:
+        ⚬ reading documentation on iterators and stl list
+            ⚬ not using erase() and end() correctly!!!!!
 
+        ⚬ compression works!!!!
 
-                
+        ⚬ testing code with own test case
 
+        ⚬ need to handle exact fit case!
+            ⚬ logical error...done!
 
+        ⚬ I finally finished! (⁠╥⁠﹏⁠╥⁠) 
 
-
-
-
-                    
-
-        
-        
-                    
-
-
-
-
-
-        
-
-        
-
-
-
-
-
+        ⚬ "Beautifying" code before submisson

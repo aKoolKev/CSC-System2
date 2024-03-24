@@ -44,33 +44,6 @@
 
 using namespace std;
 
-
-
-
-void addToList(list<Block> &freeList, Block insertBlock)
-{
-  if(insertBlock.getRefNum() == 0) // no references to this block thus a free block 
-    freeList.push_back(insertBlock);
-  else
-    cout << "ERROR: Failed to add to freeList. Block reference count: " << insertBlock.getRefNum() << endl;
-}
-
-void printList(list<Block> &freeList)
-{
-  cout << "Free List:\n";
-
-  int commaCounter = 0;// don't print a comma at the last item in list
-
-  for (Block b: freeList)
-  {
-    b.printBlockInfo();
-    if (commaCounter < freeList.size()-1)
-      cout << ", ";
-  }
-}
-
-
-
 int main(int argc, char *argv[])
 {
   //prompt for initial size of the heap
@@ -80,8 +53,10 @@ int main(int argc, char *argv[])
 
   //invalid initial size
   if (initSize <= 0)
-    cerr << "Enter an actual size!";
-
+  {
+    cout << "Enter an actual size!\n";
+    return 1;
+  }
 
   //prompt for input file
   cout << "Please enter the name of an input file: ";
@@ -92,7 +67,10 @@ int main(int argc, char *argv[])
 
   //invalid input files
   if (!ifile)
-    cerr << "Enter a valid input file name!";
+  {
+    cout << "Enter a valid input file name!\n";
+    return -1;
+  }
  
   // //a list containing free blocks (blocks with zero reference count)
   // list<Block> freeList;
