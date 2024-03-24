@@ -20,8 +20,8 @@ Token.o: Token.cpp Token.hpp $(GLBL)
 Grammar.o: Grammar.cpp Grammar.hpp $(GLBL)
 	$(CC) Grammar.cpp
 
-Block.o: Block.cpp Block.hpp $(GLBL)
-	$(CC) Block.cpp
+# Block.o: Block.cpp Block.hpp $(GLBL)
+# 	$(CC) Block.cpp
 
 Variable.o: Variable.hpp Variable.cpp $(GLBL)
 	$(CC) Variable.cpp
