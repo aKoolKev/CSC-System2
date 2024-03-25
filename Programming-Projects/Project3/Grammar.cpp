@@ -1,9 +1,9 @@
 /*
   ┌───────────────────────────────────────┐
-    File: Grammar.cpp
-    Author: Kevin Dong
-    Date: 3/14/24
-    Purpose: Define each of the grammars
+    FILE:    Grammar.cpp
+    AUTHOR:  Kevin Dong
+    DATE:    3/14/24
+    PURPOSE: Define each of the grammars
     and call Command class to execute it.
   └───────────────────────────────────────┘
 */

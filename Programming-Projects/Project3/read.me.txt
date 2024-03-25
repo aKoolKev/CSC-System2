@@ -13,6 +13,12 @@ DATE: 3/14/24 (Happy Pi Day!)
     ⚬ Provide a valid input file
 
 |BUGS|:
+    ⚬ No issues with current code. However, that does not mean this is a perfect program. 
+    ⚬ It passes the provided test case, and my own test case, but it could still produce incorrect output.
+    ⚬ I believe I covered all the special cases, but I could of forgotten some.
+
+    ⚬ I think I made my Makefile correctly. 
+        ⚬ If code does not compile correctly, please give that a look.  
 
 
 |SOLUTION APPROACH|:

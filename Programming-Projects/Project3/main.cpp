@@ -1,26 +1,3 @@
-// #include <iostream>
-// #include <fstream>
-// #include "Token.hpp"
-
-// using namespace std;
-
-// int main (int argc, char* argv[])
-// {
-//     int blockSize = -1;
-
-//     cout << "Please enter the initial freelist (heap) size: ";
-//     cin >> blockSize;
-
-//     string inputFile;
-//     cout << "Please enter the name of an input file: ";
-//     cin >> inputFile;
-
-    
-
-//     return 0;
-// }
-
-
 /*******************************************
  * File: main.cpp                          *
  * Author: Kevin Dong                      *
@@ -31,16 +8,24 @@
  *   - Writing a “code beautifier          *
  *******************************************/
 
-#include <iostream>
-#include <fstream>
-
-#include "Grammar.hpp"
-#include "Token.hpp"
+/*
+  ┌─────────────────────────────────────────────────────────────────────────┐
+    FILE:    main.cpp
+    AUTHOR:  Kevin Dong
+    DATE:    3/14/24
+    PURPOSE: an interpreter that supports allocating dynamic memory, 
+    garbage collection through a simple programming language interpreted 
+    through a grammar based recursive descent parser and a lexical analyzer.
+  └──────────────────────────────────────────────────────────────────────────┘
+*/
 
 #include "Block.hpp"
+#include <fstream>
+#include "Grammar.hpp"
+#include <iostream>
+#include <list>
+#include "Token.hpp"
 #include "Variable.hpp"
-
-#include <list> // STL list
 
 using namespace std;
 
@@ -55,7 +40,7 @@ int main(int argc, char *argv[])
   if (initSize <= 0)
   {
     cout << "Enter an actual size!\n";
-    return 1;
+    return -1;
   }
 
   //prompt for input file
@@ -72,100 +57,17 @@ int main(int argc, char *argv[])
     return -1;
   }
  
-  // //a list containing free blocks (blocks with zero reference count)
-  // list<Block> freeList;
-  
-  // //create the inital free block of specified size
-  // Block initialBlock (initSize, 0);
+  //Parser
 
-  // addToList(freeList, initialBlock);
-
-  // //debug
-  // printList(freeList);
-
-  // create an initial Token object
+  //create an initial Token object
   Token tok;
 
-  // start parsing and stores the result (sucessful or failed)
-  bool successful = prog(tok, ifile, initSize);
+  //start parsing and stores the result (sucessful or failed)
+  bool result = prog(tok, ifile, initSize);
 
-  // parsing was successful...print out the "beautified" code
-  if (successful)
-  {
-    cout << "\n# successful code =========================\n";
-    //printSourceFile();
-  }
-  else // parsing failed...just indicate such
-    cout << "\n# UNsuccessful code =========================\n";
-
-
-
-  // cout << "Created b1\n";
-  // Block b1(478, 34+478-1);
-  // b1.printBlockInfo();
-  // cout << "\n\n";
-
-  // //testing Variable class
-  // cout << "Created v0\n";
-  // Variable v0("a", 34, 0, b1);
-  // v0.printVariableInfo(); 
-  // cout << endl;
-  // b1.printBlockInfo();
-
-  // cout << "Created v1\n";
-  // Variable v1("b", 7, 90, b1);
-  // v1.printVariableInfo(); 
-  // cout << endl;
-  // b1.printBlockInfo();
-
-
-  // cout << "Created v2\n";
-  // Variable v2("c", 7, 90, b1);
-  // v2.printVariableInfo(); 
-  // cout << endl;
-  // b1.printBlockInfo();
-  // cout << "\n\n\n";
-
+  //assuming the grammar will be always be correct
+  if(!result)
+    cout << "\nInvalid grammar!\n";
  
-
-  
-
-  //debug
-  // Block b2(17,17+17-1);
-  // Block b3(14,20+14-1);
-
-  
-  //list<Block> freeList; // a list containing free blocks (blocks with zero reference count)
-
-  //debug
-  // freeList.push_back(b1);
-  // freeList.push_back(b2);
-  // freeList.push_back(b3);
-
-
-  // cout << "Not sorted:\n";
-  // for (Block b: freeList)
-  // {
-  //   b.printBlockInfo();
-  //   cout << ", ";
-  // }
-  // cout << '\n';
-
-  // cout << "\n\nSorted:\n";
-
-  // freeList.sort(sortStartIndex);
-  // for (Block b: freeList)
-  // {
-  //   b.printBlockInfo();
-  //   cout << ", ";
-  // }
-  // cout << '\n';
-
-  
-
-  
-
-  
-
   return 0;
 }

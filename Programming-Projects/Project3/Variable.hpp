@@ -1,9 +1,9 @@
 /*
   ┌───────────────────────────────────────┐
-    File: Variable.hpp
-    Author: Kevin Dong
-    Date: 3/20/24
-    Purpose: Defines the Variable class.
+    FILE:    Variable.hpp
+    AUTHOR:  Kevin Dong
+    DATE:    3/20/24
+    PURPOSE: Defines the Variable class.
   └───────────────────────────────────────┘
 */
 

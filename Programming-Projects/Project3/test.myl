@@ -12,3 +12,4 @@ compress(); dump(); free(d); compress(); dump();
 goodbye=hello; bonjour=hello;
 hola=bonjour; privet=hola; dump();
 free(hello); dump();
+free(bonjour); dump();

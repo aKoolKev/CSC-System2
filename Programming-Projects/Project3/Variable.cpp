@@ -1,9 +1,9 @@
 /*
   ┌────────────────────────────────────────────┐
-    File: Variable.cpp
-    Author: Kevin Dong
-    Date: 3/20/24
-    Purpose: Definition of the Variable class.
+    FILE:    Variable.cpp
+    AUTHOR:  Kevin Dong
+    DATE:    3/20/24
+    PURPOSE: Definition of the Variable class.
   └────────────────────────────────────────────┘
 */
 

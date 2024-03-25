@@ -1,10 +1,11 @@
 /*
-  ┌─────────────────────────────────────────┐
-    File: Block.hpp
-    Author: Kevin Dong
-    Date: 3/20/24
-    Purpose: Definitions of the Block class
-  └─────────────────────────────────────────┘
+  ┌───────────────────────────────────────────────┐
+    FILE:   Block.hpp
+    AUTHOR: Kevin Dong
+    DATE:   3/20/24
+    PURPOSE: Definitions of the Block class 
+    that represents free space in the free list.
+  └───────────────────────────────────────────────┘
 */
 
 #ifndef _BLOCK_HPP_

@@ -1,9 +1,9 @@
 /*
   ┌───────────────────────────────────────┐
-    File: Grammar.hpp
-    Author: Kevin Dong
-    Date: 3/14/24
-    Purpose: Definitions of the grammars
+    FILE:    Grammar.hpp
+    AUTHOR:  Kevin Dong
+    DATE:    3/14/24
+    PURPOSE: Definitions of the grammars
   └───────────────────────────────────────┘
 */
 
