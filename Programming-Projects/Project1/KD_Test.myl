@@ -1,0 +1,110 @@
+# This is brought to you by Kevin
+
+# Checking ALPHA 
+    abcdefgxyz
+    #with spaces
+    f d e a  e q a o u
+
+    # with uppercase!
+    ABCDKFASJDLFKDASDLJFKSDLJAFL
+    # and spaces!
+    S E W R Y  D X C E W Q T Y UI O PV V CD 
+
+    # Uppercase and lowercase letters AND numbers!
+    F145DFjdfjd23fKJKK04 dfdfd988WEWERE 1Di iD1
+
+
+
+
+
+
+# Checking DIGIT
+
+    1 2 3 4 5 6 7 8 9
+    
+    # huge number
+    1434378343473473439 7439473932 090990901091
+
+    # floating numbers
+    123123.123232717328173 8.9 1.00 1.0
+
+
+# Checking RELOP
+
+    = == 
+    < > 
+    <= >=
+
+    << >> <> ><
+
+# Checking ADDOP
+
+                        + ++++ ++ -+ ---- -=-=-=-=-
+
+# Checking MULOP * * *** /// / */**/*// 
+
+        * * *** /// / */**/*// 
+
+# Checking L&RPAREN 
+
+    ((( ))) ( ( ) ) )(
+
+# Checking L&RBRACK
+
+    [][] ][ 
+        [
+    ]
+    ]]] [[[
+    ][][
+
+# Checking AND
+
+                                    &
+                    &&
+        &&&
+
+# Checking OR
+
+    | || |||
+
+
+# Checking SEMICOLON and COMMA
+    ;,; ;;; ,,,
+    ,
+    ;
+
+# Checking reserved words
+
+    begin
+    Begin
+    end
+    EnD
+    void 
+    voiD
+    int INT iNt
+    float FLOat
+    if IF iF
+    then thEN
+    else elSe
+    while WHILE wHile
+
+
+
+
+##############################
+########## ## # # # # # # # # # # 
+#
+# dfdf
+# 
+# fddffd
+
+
+
+
+
+
+
+
+
+
+Congrats if you made it this far
