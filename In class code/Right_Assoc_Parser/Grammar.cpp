@@ -60,7 +60,7 @@ int term(std::ifstream &is)
 
 }
 
-//factor -> number | (expr)
+//factor -> NUMBER | (expr)
 int factor(std::ifstream &is)
 {
     /*
