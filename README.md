@@ -1,2 +1,2 @@
 # CSC-System2
-store all in class codes
+Store all in class codes
